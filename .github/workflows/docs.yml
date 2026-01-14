@@ -19,11 +19,18 @@ on:
     workflow_dispatch:
 
 permissions:
-    contents: write
+    contents: read
+    pages: write
+    id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+    group: "pages"
+    cancel-in-progress: false
 
 jobs:
-    deploy:
-        name: Deploy Documentation
+    build:
+        name: Build Documentation
         runs-on: ubuntu-latest
 
         steps:
@@ -33,7 +40,7 @@ jobs:
                   fetch-depth: 0
 
             - name: Set up Python
-              uses: actions/setup-python@v5
+              uses: actions/setup-python@v6
               with:
                   python-version: "3.x"
                   cache: "pip"
@@ -46,7 +53,22 @@ jobs:
               run: |
                   mkdocs build --strict
 
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: ./site
+
+    deploy:
+        name: Deploy to GitHub Pages
+        needs: build
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        steps:
             - name: Deploy to GitHub Pages
-              if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
-              run: |
-                  mkdocs gh-deploy --force
+              id: deployment
+              uses: actions/deploy-pages@v4

@@ -334,9 +334,9 @@ orb share ./folder --relay http://localhost:8080 --debug
 
 ## What's Next?
 
-- Read [README.md](README.md) for full documentation
-- Review [SECURITY.md](SECURITY.md) for security details
-- Check [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) for architecture
+- Read the [full documentation](index.md)
+- Review [Security Overview](security.md) for security details
+- Check [Architecture](architecture.md) for system design
 - Report issues on GitHub
 
 ---

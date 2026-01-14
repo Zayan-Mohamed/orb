@@ -573,4 +573,4 @@ However, users must:
 
 - Read [Cryptography Details](cryptography.md)
 - Review [Best Practices](best-practices.md)
-- Check [Security Overview](security.md)
+- Check [Security Overview](../security.md)

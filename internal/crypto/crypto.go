@@ -81,16 +81,20 @@ func GenerateX25519KeyPair() (*X25519KeyPair, error) {
 
 // ComputeSharedSecret performs X25519 key exchange
 func ComputeSharedSecret(privateKey, publicKey *[32]byte) (*[32]byte, error) {
-	var shared [32]byte
-	curve25519.ScalarMult(&shared, privateKey, publicKey)
+	shared, err := curve25519.X25519(privateKey[:], publicKey[:])
+	if err != nil {
+		return nil, fmt.Errorf("X25519 failed: %w", err)
+	}
 
 	// Check for low-order points (security requirement)
 	var zero [32]byte
-	if subtle.ConstantTimeCompare(shared[:], zero[:]) == 1 {
+	var sharedArray [32]byte
+	copy(sharedArray[:], shared)
+	if subtle.ConstantTimeCompare(sharedArray[:], zero[:]) == 1 {
 		return nil, errors.New("invalid shared secret: low-order point")
 	}
 
-	return &shared, nil
+	return &sharedArray, nil
 }
 
 // AEAD provides authenticated encryption using ChaCha20-Poly1305

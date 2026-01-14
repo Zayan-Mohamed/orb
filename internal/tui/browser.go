@@ -60,7 +60,6 @@ type model struct {
 	currentPath string
 	list        list.Model
 	error       string
-	downloading bool
 }
 
 func newModel(tun *tunnel.Tunnel) model {
@@ -198,8 +197,8 @@ func (m model) loadDirectory() tea.Cmd {
 
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
-			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
-			return fmt.Errorf(errResp.Message)
+			_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
+			return fmt.Errorf("%s", errResp.Message)
 		}
 
 		if respFrame.Type != protocol.FrameTypeResponse {
@@ -244,7 +243,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		}
 
 		var buf bytes.Buffer
-		gob.NewEncoder(&buf).Encode(statReq)
+		_ = gob.NewEncoder(&buf).Encode(statReq)
 
 		frame := &protocol.Frame{
 			Type:    protocol.FrameTypeStat,
@@ -262,8 +261,8 @@ func (m model) downloadFile(filename string) tea.Cmd {
 
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
-			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
-			return fmt.Errorf(errResp.Message)
+			_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
+			return fmt.Errorf("%s", errResp.Message)
 		}
 
 		if respFrame.Type != protocol.FrameTypeResponse {
@@ -271,7 +270,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		}
 
 		var statResp protocol.StatResponse
-		gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&statResp)
+		_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&statResp)
 
 		// Read file content
 		readReq := protocol.ReadRequest{
@@ -281,7 +280,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		}
 
 		buf.Reset()
-		gob.NewEncoder(&buf).Encode(readReq)
+		_ = gob.NewEncoder(&buf).Encode(readReq)
 
 		frame = &protocol.Frame{
 			Type:    protocol.FrameTypeRead,
@@ -299,8 +298,8 @@ func (m model) downloadFile(filename string) tea.Cmd {
 
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
-			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
-			return fmt.Errorf(errResp.Message)
+			_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
+			return fmt.Errorf("%s", errResp.Message)
 		}
 
 		if respFrame.Type != protocol.FrameTypeResponse {
@@ -308,7 +307,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		}
 
 		var readResp protocol.ReadResponse
-		gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&readResp)
+		_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&readResp)
 
 		// Save to local file
 		localPath := filepath.Join(".", filename)
@@ -344,59 +343,4 @@ func formatSize(bytes int64) string {
 		exp++
 	}
 	return fmt.Sprintf("%.1f %cB", float64(bytes)/float64(div), "KMGTPE"[exp])
-}
-
-// UploadFile uploads a file to the remote filesystem
-func (m model) uploadFile(localPath string) tea.Cmd {
-	return func() tea.Msg {
-		// Read local file
-		data, err := os.ReadFile(localPath)
-		if err != nil {
-			return err
-		}
-
-		// Upload to remote
-		filename := filepath.Base(localPath)
-		remotePath := filepath.Join(m.currentPath, filename)
-
-		writeReq := protocol.WriteRequest{
-			Path:   remotePath,
-			Offset: 0,
-			Data:   data,
-		}
-
-		var buf bytes.Buffer
-		gob.NewEncoder(&buf).Encode(writeReq)
-
-		frame := &protocol.Frame{
-			Type:    protocol.FrameTypeWrite,
-			Payload: buf.Bytes(),
-		}
-
-		if err := m.tunnel.SendFrame(frame); err != nil {
-			return err
-		}
-
-		respFrame, err := m.tunnel.ReceiveFrame()
-		if err != nil {
-			return err
-		}
-
-		if respFrame.Type == protocol.FrameTypeError {
-			var errResp protocol.ErrorResponse
-			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
-			return fmt.Errorf(errResp.Message)
-		}
-
-		// Reload directory
-		return m.loadDirectory()()
-	}
-}
-
-// Helper to read input from user
-func readInput(prompt string) (string, error) {
-	fmt.Print(prompt)
-	var input string
-	_, err := fmt.Scanln(&input)
-	return input, err
 }

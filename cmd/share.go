@@ -224,7 +224,7 @@ func processRequest(frame *protocol.Frame, fs *filesystem.SecureFilesystem) *pro
 
 func responseFrame(data interface{}) *protocol.Frame {
 	var buf bytes.Buffer
-	gob.NewEncoder(&buf).Encode(data)
+	_ = gob.NewEncoder(&buf).Encode(data)
 
 	return &protocol.Frame{
 		Type:    protocol.FrameTypeResponse,
@@ -239,7 +239,7 @@ func errorFrame(code uint32, message string) *protocol.Frame {
 	}
 
 	var buf bytes.Buffer
-	gob.NewEncoder(&buf).Encode(errResp)
+	_ = gob.NewEncoder(&buf).Encode(errResp)
 
 	return &protocol.Frame{
 		Type:    protocol.FrameTypeError,

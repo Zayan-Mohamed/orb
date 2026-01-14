@@ -65,7 +65,7 @@ Documentation improvements are always appreciated:
 3. **Set up development environment**
 
    ```bash
-   # Install Go 1.21 or later
+   # Install Go 1.22 or later
    go version
 
    # Install dependencies

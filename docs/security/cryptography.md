@@ -475,4 +475,4 @@ go test -fuzz=FuzzHandshake
 
 - Read [Security Best Practices](best-practices.md)
 - Understand [Threat Model](threat-model.md)
-- Review [Security Overview](security.md)
+- Review [Security Overview](../security.md)
