@@ -37,7 +37,7 @@ func runConnect(cmd *cobra.Command, args []string) error {
 	// Prompt for passcode if not provided
 	if passcode == "" {
 		fmt.Print("Enter passcode: ")
-		fmt.Scanln(&passcode)
+		_, _ = fmt.Scanln(&passcode)
 	}
 
 	// Establish tunnel

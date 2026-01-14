@@ -197,7 +197,7 @@ func (m model) loadDirectory() tea.Cmd {
 
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
-			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
+			_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
 			return fmt.Errorf("%s", errResp.Message)
 		}
 
@@ -243,7 +243,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		}
 
 		var buf bytes.Buffer
-		gob.NewEncoder(&buf).Encode(statReq)
+		_ = gob.NewEncoder(&buf).Encode(statReq)
 
 		frame := &protocol.Frame{
 			Type:    protocol.FrameTypeStat,
@@ -261,7 +261,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
-			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
+			_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
 			return fmt.Errorf("%s", errResp.Message)
 		}
 
@@ -270,7 +270,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		}
 
 		var statResp protocol.StatResponse
-		gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&statResp)
+		_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&statResp)
 
 		// Read file content
 		readReq := protocol.ReadRequest{
@@ -280,7 +280,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		}
 
 		buf.Reset()
-		gob.NewEncoder(&buf).Encode(readReq)
+		_ = gob.NewEncoder(&buf).Encode(readReq)
 
 		frame = &protocol.Frame{
 			Type:    protocol.FrameTypeRead,
@@ -298,7 +298,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
-			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
+			_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
 			return fmt.Errorf("%s", errResp.Message)
 		}
 
@@ -307,7 +307,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		}
 
 		var readResp protocol.ReadResponse
-		gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&readResp)
+		_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&readResp)
 
 		// Save to local file
 		localPath := filepath.Join(".", filename)
