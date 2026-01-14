@@ -1,0 +1,52 @@
+name: Documentation
+
+on:
+    push:
+        branches:
+            - main
+            - master
+        paths:
+            - "docs/**"
+            - "mkdocs.yml"
+            - ".github/workflows/docs.yml"
+    pull_request:
+        branches:
+            - main
+            - master
+        paths:
+            - "docs/**"
+            - "mkdocs.yml"
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+jobs:
+    deploy:
+        name: Deploy Documentation
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set up Python
+              uses: actions/setup-python@v5
+              with:
+                  python-version: "3.x"
+                  cache: "pip"
+
+            - name: Install dependencies
+              run: |
+                  pip install -r requirements.txt
+
+            - name: Build documentation
+              run: |
+                  mkdocs build --strict
+
+            - name: Deploy to GitHub Pages
+              if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+              run: |
+                  mkdocs gh-deploy --force

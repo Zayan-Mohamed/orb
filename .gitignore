@@ -1,0 +1,59 @@
+# Binaries
+orb
+*.exe
+*.dll
+*.so
+*.dylib
+build/
+dist/
+
+# Test binaries
+*.test
+
+# Coverage
+*.out
+*.prof
+coverage.txt
+coverage.html
+
+# Go workspace
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Documentation build
+site/
+.cache/
+
+# asciinema recordings (keep only final GIFs)
+*.cast
+
+# Video recordings (keep only converted GIFs)
+*.mp4
+*.mov
+*.avi
+
+# But keep GIF demos
+!docs/assets/images/*.gif

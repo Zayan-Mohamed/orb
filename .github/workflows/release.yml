@@ -1,0 +1,138 @@
+name: Release
+
+on:
+    push:
+        tags:
+            - "v*.*.*"
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: "Tag to release (e.g., v1.0.0)"
+                required: true
+                type: string
+
+permissions:
+    contents: write
+
+jobs:
+    build-and-release:
+        name: Build and Release
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version-file: go.mod
+                  cache: true
+
+            - name: Get version
+              id: version
+              run: |
+                  if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                    echo "VERSION=${{ inputs.tag }}" >> $GITHUB_OUTPUT
+                  else
+                    echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Build all platforms
+              env:
+                  VERSION: ${{ steps.version.outputs.VERSION }}
+              run: |
+                  mkdir -p build
+
+                  # Build for each platform
+                  platforms=(
+                    "linux/amd64"
+                    "linux/arm64"
+                    "darwin/amd64"
+                    "darwin/arm64"
+                    "windows/amd64"
+                  )
+
+                  for platform in "${platforms[@]}"; do
+                    GOOS=${platform%/*}
+                    GOARCH=${platform#*/}
+                    output="build/orb-${GOOS}-${GOARCH}"
+                    
+                    if [ "$GOOS" = "windows" ]; then
+                      output="${output}.exe"
+                    fi
+                    
+                    echo "Building for $GOOS/$GOARCH..."
+                    CGO_ENABLED=0 GOOS=$GOOS GOARCH=$GOARCH go build \
+                      -ldflags="-s -w -X main.version=${VERSION}" \
+                      -o "$output"
+                    
+                    # Create checksums
+                    if [ "$GOOS" = "windows" ]; then
+                      sha256sum "$output" > "$output.sha256"
+                    else
+                      sha256sum "$output" > "$output.sha256"
+                      chmod +x "$output"
+                    fi
+                  done
+
+                  # List built files
+                  ls -lah build/
+
+            - name: Generate release notes
+              id: release_notes
+              run: |
+                  # Get the previous tag
+                  PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+                  CURRENT_TAG="${{ steps.version.outputs.VERSION }}"
+
+                  echo "## What's Changed" > release_notes.md
+                  echo "" >> release_notes.md
+
+                  if [ -n "$PREVIOUS_TAG" ]; then
+                    git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges >> release_notes.md
+                  else
+                    echo "Initial release" >> release_notes.md
+                  fi
+
+                  echo "" >> release_notes.md
+                  echo "" >> release_notes.md
+                  echo "## Installation" >> release_notes.md
+                  echo "" >> release_notes.md
+                  echo '```bash' >> release_notes.md
+                  echo "# Linux/macOS" >> release_notes.md
+                  echo 'curl -L https://github.com/${{ github.repository }}/releases/download/'${CURRENT_TAG}'/orb-$(uname -s | tr "[:upper:]" "[:lower:]")-$(uname -m) -o orb' >> release_notes.md
+                  echo "chmod +x orb" >> release_notes.md
+                  echo "sudo mv orb /usr/local/bin/" >> release_notes.md
+                  echo '```' >> release_notes.md
+                  echo "" >> release_notes.md
+                  echo "## Checksums" >> release_notes.md
+                  echo "" >> release_notes.md
+                  echo "Verify your download with the provided `.sha256` files:" >> release_notes.md
+                  echo "" >> release_notes.md
+                  echo '```bash' >> release_notes.md
+                  echo 'sha256sum -c orb-linux-amd64.sha256' >> release_notes.md
+                  echo '```' >> release_notes.md
+
+                  cat release_notes.md
+
+            - name: Create Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  tag_name: ${{ steps.version.outputs.VERSION }}
+                  name: Release ${{ steps.version.outputs.VERSION }}
+                  body_path: release_notes.md
+                  draft: false
+                  prerelease: ${{ contains(steps.version.outputs.VERSION, 'rc') || contains(steps.version.outputs.VERSION, 'beta') || contains(steps.version.outputs.VERSION, 'alpha') }}
+                  files: |
+                      build/*
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Update Homebrew Formula (optional)
+              if: "!contains(steps.version.outputs.VERSION, 'rc') && !contains(steps.version.outputs.VERSION, 'beta') && !contains(steps.version.outputs.VERSION, 'alpha')"
+              run: |
+                  echo "TODO: Add Homebrew formula update script"
+                  echo "For now, manually update the Homebrew tap if you have one"

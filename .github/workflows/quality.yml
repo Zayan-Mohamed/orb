@@ -1,0 +1,78 @@
+name: Code Quality
+
+on:
+    push:
+        branches:
+            - main
+            - master
+            - develop
+    pull_request:
+        branches:
+            - main
+            - master
+            - develop
+
+jobs:
+    quality:
+        name: Code Quality Checks
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version-file: go.mod
+                  cache: true
+
+            - name: Check Go formatting
+              run: |
+                  if [ "$(gofmt -s -l . | wc -l)" -gt 0 ]; then
+                    echo "The following files are not formatted:"
+                    gofmt -s -l .
+                    exit 1
+                  fi
+
+            - name: Check Go modules
+              run: |
+                  go mod tidy
+                  if ! git diff --exit-code go.mod go.sum; then
+                    echo "go.mod or go.sum needs updating"
+                    exit 1
+                  fi
+
+            - name: Run go vet
+              run: go vet ./...
+
+            - name: Run staticcheck
+              uses: dominikh/staticcheck-action@v1
+              with:
+                  version: "latest"
+                  install-go: false
+
+            - name: Check for ineffectual assignments
+              run: |
+                  go install github.com/gordonklaus/ineffassign@latest
+                  ineffassign ./...
+
+            - name: Check for misspellings
+              uses: reviewdog/action-misspell@v1
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  locale: "US"
+
+            - name: Run gocyclo
+              run: |
+                  go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+                  gocyclo -over 15 .
+
+            - name: Check documentation links
+              uses: gaurav-nelson/github-action-markdown-link-check@v1
+              with:
+                  use-quiet-mode: "yes"
+                  config-file: ".github/markdown-link-check-config.json"
+                  folder-path: "docs"

@@ -1,0 +1,115 @@
+name: Build
+
+on:
+    push:
+        branches:
+            - main
+            - master
+            - develop
+    pull_request:
+        branches:
+            - main
+            - master
+            - develop
+    workflow_dispatch:
+
+jobs:
+    lint:
+        name: Lint
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version-file: go.mod
+                  cache: true
+
+            - name: Run golangci-lint
+              uses: golangci/golangci-lint-action@v4
+              with:
+                  version: latest
+                  args: --timeout=5m
+
+    test:
+        name: Test
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                go-version: ["1.21", "1.22", "1.23"]
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version: ${{ matrix.go-version }}
+                  cache: true
+
+            - name: Download dependencies
+              run: go mod download
+
+            - name: Run tests
+              run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+            - name: Upload coverage to Codecov
+              if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.23'
+              uses: codecov/codecov-action@v4
+              with:
+                  files: ./coverage.txt
+                  flags: unittests
+                  name: codecov-umbrella
+
+    build:
+        name: Build
+        needs: [lint, test]
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                include:
+                    - goos: linux
+                      goarch: amd64
+                    - goos: linux
+                      goarch: arm64
+                    - goos: darwin
+                      goarch: amd64
+                    - goos: darwin
+                      goarch: arm64
+                    - goos: windows
+                      goarch: amd64
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                  go-version-file: go.mod
+                  cache: true
+
+            - name: Build binary
+              env:
+                  GOOS: ${{ matrix.goos }}
+                  GOARCH: ${{ matrix.goarch }}
+                  CGO_ENABLED: 0
+              run: |
+                  mkdir -p build
+                  if [ "${{ matrix.goos }}" = "windows" ]; then
+                    go build -ldflags="-s -w" -o build/orb-${{ matrix.goos }}-${{ matrix.goarch }}.exe
+                  else
+                    go build -ldflags="-s -w" -o build/orb-${{ matrix.goos }}-${{ matrix.goarch }}
+                  fi
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: orb-${{ matrix.goos }}-${{ matrix.goarch }}
+                  path: build/*
+                  retention-days: 7
