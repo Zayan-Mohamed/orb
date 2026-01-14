@@ -199,7 +199,7 @@ func (m model) loadDirectory() tea.Cmd {
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
 			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
-			return fmt.Errorf(errResp.Message)
+			return fmt.Errorf("%s", errResp.Message)
 		}
 
 		if respFrame.Type != protocol.FrameTypeResponse {
@@ -263,7 +263,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
 			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
-			return fmt.Errorf(errResp.Message)
+			return fmt.Errorf("%s", errResp.Message)
 		}
 
 		if respFrame.Type != protocol.FrameTypeResponse {
@@ -300,7 +300,7 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
 			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
-			return fmt.Errorf(errResp.Message)
+			return fmt.Errorf("%s", errResp.Message)
 		}
 
 		if respFrame.Type != protocol.FrameTypeResponse {
@@ -385,7 +385,7 @@ func (m model) uploadFile(localPath string) tea.Cmd {
 		if respFrame.Type == protocol.FrameTypeError {
 			var errResp protocol.ErrorResponse
 			gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
-			return fmt.Errorf(errResp.Message)
+			return fmt.Errorf("%s", errResp.Message)
 		}
 
 		// Reload directory

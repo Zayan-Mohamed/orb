@@ -1,6 +1,6 @@
 module github.com/Zayan-Mohamed/orb
 
-go 1.23.0
+go 1.24.0
 
 require (
 	github.com/charmbracelet/bubbles v0.18.0
@@ -8,7 +8,7 @@ require (
 	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/gorilla/websocket v1.5.1
 	github.com/spf13/cobra v1.8.0
-	golang.org/x/crypto v0.36.0
+	golang.org/x/crypto v0.47.0
 )
 
 require (
@@ -27,9 +27,9 @@ require (
 	github.com/rivo/uniseg v0.4.6 // indirect
 	github.com/sahilm/fuzzy v0.1.1-0.20230530133925-c48e322e2a8f // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/net v0.38.0 // indirect
-	golang.org/x/sync v0.12.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
-	golang.org/x/term v0.30.0 // indirect
-	golang.org/x/text v0.23.0 // indirect
+	golang.org/x/net v0.49.0 // indirect
+	golang.org/x/sync v0.19.0 // indirect
+	golang.org/x/sys v0.40.0 // indirect
+	golang.org/x/term v0.39.0 // indirect
+	golang.org/x/text v0.33.0 // indirect
 )
