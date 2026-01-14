@@ -274,7 +274,7 @@ CMD ["orb", "relay", "--listen", ":8080"]
 ### Documentation Links
 
 - GitHub: https://github.com/Zayan-Mohamed/orb
-- Docs: https://docs.orb.example.com
+- Docs: https://zayan-mohamed.github.io/orb
 - Security: security@orb.example.com
 
 ### Common Issues

@@ -188,7 +188,7 @@ If you don't want to install software, you can use:
 
 1. **ScreenToGif** (Windows): https://www.screentogif.com/
 2. **GIPHY Capture** (macOS): https://giphy.com/apps/giphycapture
-3. **Recordit** (Cross-platform): https://recordit.co/
+3. **Recordit** (Cross-platform): https://elements.envato.com/
 
 ## Tips for High-Quality GIFs
 
