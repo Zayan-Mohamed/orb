@@ -40,7 +40,7 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
-                go-version: ["1.21", "1.22", "1.23"]
+                go-version: ["1.22", "1.23", "1.24"]
 
         steps:
             - name: Checkout code
@@ -59,7 +59,7 @@ jobs:
               run: go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 
             - name: Upload coverage to Codecov
-              if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.23'
+              if: matrix.os == 'ubuntu-latest' && matrix.go-version == '1.24'
               uses: codecov/codecov-action@v4
               with:
                   files: ./coverage.txt
