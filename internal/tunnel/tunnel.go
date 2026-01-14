@@ -82,65 +82,77 @@ func (t *Tunnel) performHandshake(presharedKey []byte, isInitiator bool) error {
 	defer noise.Cleanup()
 
 	if isInitiator {
-		// Send initiator message
-		msg, err := noise.CreateInitiatorMessage()
-		if err != nil {
-			return err
-		}
-
-		frame := &protocol.Frame{
-			Type:    protocol.FrameTypeHandshake,
-			Payload: msg,
-		}
-
-		if err := t.sendRawFrame(frame); err != nil {
-			return err
-		}
-
-		// Receive responder message
-		respFrame, err := t.recvRawFrame()
-		if err != nil {
-			return err
-		}
-
-		if respFrame.Type != protocol.FrameTypeHandshakeResp {
-			return fmt.Errorf("unexpected frame type: %d", respFrame.Type)
-		}
-
-		if err := noise.ProcessResponderMessage(respFrame.Payload); err != nil {
+		if err := t.performInitiatorHandshake(noise); err != nil {
 			return err
 		}
 	} else {
-		// Receive initiator message
-		initFrame, err := t.recvRawFrame()
-		if err != nil {
-			return err
-		}
-
-		if initFrame.Type != protocol.FrameTypeHandshake {
-			return fmt.Errorf("unexpected frame type: %d", initFrame.Type)
-		}
-
-		if err := noise.ProcessInitiatorMessage(initFrame.Payload); err != nil {
-			return err
-		}
-
-		// Send responder message
-		msg, err := noise.CreateResponderMessage()
-		if err != nil {
-			return err
-		}
-
-		frame := &protocol.Frame{
-			Type:    protocol.FrameTypeHandshakeResp,
-			Payload: msg,
-		}
-
-		if err := t.sendRawFrame(frame); err != nil {
+		if err := t.performResponderHandshake(noise); err != nil {
 			return err
 		}
 	}
 
+	return t.setupTransportKeys(noise)
+}
+
+func (t *Tunnel) performInitiatorHandshake(noise *crypto.NoiseHandshake) error {
+	// Send initiator message
+	msg, err := noise.CreateInitiatorMessage()
+	if err != nil {
+		return err
+	}
+
+	frame := &protocol.Frame{
+		Type:    protocol.FrameTypeHandshake,
+		Payload: msg,
+	}
+
+	if err := t.sendRawFrame(frame); err != nil {
+		return err
+	}
+
+	// Receive responder message
+	respFrame, err := t.recvRawFrame()
+	if err != nil {
+		return err
+	}
+
+	if respFrame.Type != protocol.FrameTypeHandshakeResp {
+		return fmt.Errorf("unexpected frame type: %d", respFrame.Type)
+	}
+
+	return noise.ProcessResponderMessage(respFrame.Payload)
+}
+
+func (t *Tunnel) performResponderHandshake(noise *crypto.NoiseHandshake) error {
+	// Receive initiator message
+	initFrame, err := t.recvRawFrame()
+	if err != nil {
+		return err
+	}
+
+	if initFrame.Type != protocol.FrameTypeHandshake {
+		return fmt.Errorf("unexpected frame type: %d", initFrame.Type)
+	}
+
+	if err := noise.ProcessInitiatorMessage(initFrame.Payload); err != nil {
+		return err
+	}
+
+	// Send responder message
+	msg, err := noise.CreateResponderMessage()
+	if err != nil {
+		return err
+	}
+
+	frame := &protocol.Frame{
+		Type:    protocol.FrameTypeHandshakeResp,
+		Payload: msg,
+	}
+
+	return t.sendRawFrame(frame)
+}
+
+func (t *Tunnel) setupTransportKeys(noise *crypto.NoiseHandshake) error {
 	// Derive transport keys
 	sendKey, recvKey, err := noise.DeriveTransportKeys()
 	if err != nil {

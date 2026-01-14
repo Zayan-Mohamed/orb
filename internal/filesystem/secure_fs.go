@@ -153,6 +153,7 @@ func (fs *SecureFilesystem) Read(path string, offset, length int64) (*protocol.R
 		return nil, err
 	}
 
+	// #nosec G304 -- safePath is validated by ResolvePath to prevent directory traversal
 	file, err := os.Open(safePath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
@@ -212,7 +213,8 @@ func (fs *SecureFilesystem) Write(path string, offset int64, data []byte) (*prot
 	}
 
 	// Open or create file
-	file, err := os.OpenFile(safePath, os.O_CREATE|os.O_WRONLY, 0644)
+	// #nosec G304 -- safePath is validated by ResolvePath to prevent directory traversal
+	file, err := os.OpenFile(safePath, os.O_CREATE|os.O_WRONLY, 0600)
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}

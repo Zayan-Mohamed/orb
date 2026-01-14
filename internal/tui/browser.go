@@ -309,9 +309,9 @@ func (m model) downloadFile(filename string) tea.Cmd {
 		var readResp protocol.ReadResponse
 		_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&readResp)
 
-		// Save to local file
+		// Save to local file with secure permissions
 		localPath := filepath.Join(".", filename)
-		if err := os.WriteFile(localPath, readResp.Data, 0644); err != nil {
+		if err := os.WriteFile(localPath, readResp.Data, 0600); err != nil {
 			return err
 		}
 

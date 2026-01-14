@@ -132,98 +132,118 @@ func processRequest(frame *protocol.Frame, fs *filesystem.SecureFilesystem) *pro
 			Type:    protocol.FrameTypePong,
 			Payload: []byte{},
 		}
-
 	case protocol.FrameTypeList:
-		var req protocol.ListRequest
-		if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
-			return errorFrame(protocol.ErrCodeUnknown, err.Error())
-		}
-
-		resp, err := fs.List(req.Path)
-		if err != nil {
-			return errorFrame(protocol.ErrCodeIO, err.Error())
-		}
-
-		return responseFrame(resp)
-
+		return handleListRequest(frame, fs)
 	case protocol.FrameTypeStat:
-		var req protocol.StatRequest
-		if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
-			return errorFrame(protocol.ErrCodeUnknown, err.Error())
-		}
-
-		resp, err := fs.Stat(req.Path)
-		if err != nil {
-			return errorFrame(protocol.ErrCodeNotFound, err.Error())
-		}
-
-		return responseFrame(resp)
-
+		return handleStatRequest(frame, fs)
 	case protocol.FrameTypeRead:
-		var req protocol.ReadRequest
-		if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
-			return errorFrame(protocol.ErrCodeUnknown, err.Error())
-		}
-
-		resp, err := fs.Read(req.Path, req.Offset, req.Length)
-		if err != nil {
-			return errorFrame(protocol.ErrCodeIO, err.Error())
-		}
-
-		return responseFrame(resp)
-
+		return handleReadRequest(frame, fs)
 	case protocol.FrameTypeWrite:
-		var req protocol.WriteRequest
-		if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
-			return errorFrame(protocol.ErrCodeUnknown, err.Error())
-		}
-
-		resp, err := fs.Write(req.Path, req.Offset, req.Data)
-		if err != nil {
-			return errorFrame(protocol.ErrCodePermission, err.Error())
-		}
-
-		return responseFrame(resp)
-
+		return handleWriteRequest(frame, fs)
 	case protocol.FrameTypeDelete:
-		var req protocol.DeleteRequest
-		if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
-			return errorFrame(protocol.ErrCodeUnknown, err.Error())
-		}
-
-		if err := fs.Delete(req.Path); err != nil {
-			return errorFrame(protocol.ErrCodePermission, err.Error())
-		}
-
-		return responseFrame(&protocol.WriteResponse{BytesWritten: 0})
-
+		return handleDeleteRequest(frame, fs)
 	case protocol.FrameTypeRename:
-		var req protocol.RenameRequest
-		if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
-			return errorFrame(protocol.ErrCodeUnknown, err.Error())
-		}
-
-		if err := fs.Rename(req.OldPath, req.NewPath); err != nil {
-			return errorFrame(protocol.ErrCodePermission, err.Error())
-		}
-
-		return responseFrame(&protocol.WriteResponse{BytesWritten: 0})
-
+		return handleRenameRequest(frame, fs)
 	case protocol.FrameTypeMkdir:
-		var req protocol.MkdirRequest
-		if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
-			return errorFrame(protocol.ErrCodeUnknown, err.Error())
-		}
-
-		if err := fs.Mkdir(req.Path, req.Perm); err != nil {
-			return errorFrame(protocol.ErrCodePermission, err.Error())
-		}
-
-		return responseFrame(&protocol.WriteResponse{BytesWritten: 0})
-
+		return handleMkdirRequest(frame, fs)
 	default:
 		return errorFrame(protocol.ErrCodeUnknown, "unknown request type")
 	}
+}
+
+func handleListRequest(frame *protocol.Frame, fs *filesystem.SecureFilesystem) *protocol.Frame {
+	var req protocol.ListRequest
+	if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
+		return errorFrame(protocol.ErrCodeUnknown, err.Error())
+	}
+
+	resp, err := fs.List(req.Path)
+	if err != nil {
+		return errorFrame(protocol.ErrCodeIO, err.Error())
+	}
+
+	return responseFrame(resp)
+}
+
+func handleStatRequest(frame *protocol.Frame, fs *filesystem.SecureFilesystem) *protocol.Frame {
+	var req protocol.StatRequest
+	if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
+		return errorFrame(protocol.ErrCodeUnknown, err.Error())
+	}
+
+	resp, err := fs.Stat(req.Path)
+	if err != nil {
+		return errorFrame(protocol.ErrCodeNotFound, err.Error())
+	}
+
+	return responseFrame(resp)
+}
+
+func handleReadRequest(frame *protocol.Frame, fs *filesystem.SecureFilesystem) *protocol.Frame {
+	var req protocol.ReadRequest
+	if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
+		return errorFrame(protocol.ErrCodeUnknown, err.Error())
+	}
+
+	resp, err := fs.Read(req.Path, req.Offset, req.Length)
+	if err != nil {
+		return errorFrame(protocol.ErrCodeIO, err.Error())
+	}
+
+	return responseFrame(resp)
+}
+
+func handleWriteRequest(frame *protocol.Frame, fs *filesystem.SecureFilesystem) *protocol.Frame {
+	var req protocol.WriteRequest
+	if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
+		return errorFrame(protocol.ErrCodeUnknown, err.Error())
+	}
+
+	resp, err := fs.Write(req.Path, req.Offset, req.Data)
+	if err != nil {
+		return errorFrame(protocol.ErrCodePermission, err.Error())
+	}
+
+	return responseFrame(resp)
+}
+
+func handleDeleteRequest(frame *protocol.Frame, fs *filesystem.SecureFilesystem) *protocol.Frame {
+	var req protocol.DeleteRequest
+	if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
+		return errorFrame(protocol.ErrCodeUnknown, err.Error())
+	}
+
+	if err := fs.Delete(req.Path); err != nil {
+		return errorFrame(protocol.ErrCodePermission, err.Error())
+	}
+
+	return responseFrame(&protocol.WriteResponse{BytesWritten: 0})
+}
+
+func handleRenameRequest(frame *protocol.Frame, fs *filesystem.SecureFilesystem) *protocol.Frame {
+	var req protocol.RenameRequest
+	if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
+		return errorFrame(protocol.ErrCodeUnknown, err.Error())
+	}
+
+	if err := fs.Rename(req.OldPath, req.NewPath); err != nil {
+		return errorFrame(protocol.ErrCodePermission, err.Error())
+	}
+
+	return responseFrame(&protocol.WriteResponse{BytesWritten: 0})
+}
+
+func handleMkdirRequest(frame *protocol.Frame, fs *filesystem.SecureFilesystem) *protocol.Frame {
+	var req protocol.MkdirRequest
+	if err := gob.NewDecoder(bytes.NewReader(frame.Payload)).Decode(&req); err != nil {
+		return errorFrame(protocol.ErrCodeUnknown, err.Error())
+	}
+
+	if err := fs.Mkdir(req.Path, req.Perm); err != nil {
+		return errorFrame(protocol.ErrCodePermission, err.Error())
+	}
+
+	return responseFrame(&protocol.WriteResponse{BytesWritten: 0})
 }
 
 func responseFrame(data interface{}) *protocol.Frame {

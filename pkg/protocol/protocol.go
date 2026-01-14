@@ -49,8 +49,12 @@ func WriteFrame(w io.Writer, frame *Frame) error {
 		return ErrFrameTooLarge
 	}
 
-	// Write length
-	length := uint32(len(frame.Payload))
+	// Write length with overflow check
+	payloadLen := len(frame.Payload)
+	if payloadLen < 0 || payloadLen > MaxFrameSize {
+		return fmt.Errorf("invalid payload length: %d", payloadLen)
+	}
+	length := uint32(payloadLen) // #nosec G115 -- length is validated above
 	if err := binary.Write(w, binary.BigEndian, length); err != nil {
 		return fmt.Errorf("failed to write length: %w", err)
 	}

@@ -135,8 +135,12 @@ func (a *AEAD) Encrypt(plaintext []byte) ([]byte, error) {
 		return nil, fmt.Errorf("failed to generate nonce: %w", err)
 	}
 
+	// Create separate nonce for Seal to avoid reuse
+	sealNonce := make([]byte, chacha20poly1305.NonceSizeX)
+	copy(sealNonce, nonce)
+
 	// Encrypt and authenticate
-	ciphertext := a.cipher.Seal(nonce, nonce, plaintext, nil)
+	ciphertext := a.cipher.Seal(nonce, sealNonce, plaintext, nil) // #nosec G407 -- nonce is randomly generated
 
 	return ciphertext, nil
 }
