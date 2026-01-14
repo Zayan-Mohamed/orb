@@ -249,7 +249,10 @@ func (nh *NoiseHandshake) computeAuthProof() []byte {
 	h.Write(nh.presharedKey)
 	// Add random challenge for uniqueness
 	challenge := make([]byte, 32)
-	rand.Read(challenge)
+	if _, err := rand.Read(challenge); err != nil {
+		// This should never fail with crypto/rand, but handle it safely
+		panic(fmt.Sprintf("crypto/rand failed: %v", err))
+	}
 	h.Write(challenge)
 	proof := h.Sum(nil)
 

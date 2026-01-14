@@ -186,7 +186,7 @@ func (t *Tunnel) SendFrame(frame *protocol.Frame) error {
 	}
 
 	// Send over WebSocket
-	t.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+	_ = t.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
 	if err := t.conn.WriteMessage(websocket.BinaryMessage, encrypted); err != nil {
 		return fmt.Errorf("failed to send: %w", err)
 	}
@@ -204,7 +204,7 @@ func (t *Tunnel) ReceiveFrame() (*protocol.Frame, error) {
 	}
 
 	// Receive from WebSocket
-	t.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	_ = t.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
 	_, encrypted, err := t.conn.ReadMessage()
 	if err != nil {
 		return nil, fmt.Errorf("failed to receive: %w", err)
@@ -238,13 +238,13 @@ func (t *Tunnel) sendRawFrame(frame *protocol.Frame) error {
 		return err
 	}
 
-	t.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+	_ = t.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
 	return t.conn.WriteMessage(websocket.BinaryMessage, buf.Bytes())
 }
 
 // recvRawFrame receives an unencrypted frame (for handshake only)
 func (t *Tunnel) recvRawFrame() (*protocol.Frame, error) {
-	t.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	_ = t.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
 	_, data, err := t.conn.ReadMessage()
 	if err != nil {
 		return nil, err

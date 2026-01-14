@@ -89,9 +89,9 @@ func (rs *RelayServer) HandleShare(w http.ResponseWriter, r *http.Request) {
 
 	// Configure connection
 	conn.SetReadLimit(maxMessageSize)
-	conn.SetReadDeadline(time.Now().Add(pongWait))
+	_ = conn.SetReadDeadline(time.Now().Add(pongWait))
 	conn.SetPongHandler(func(string) error {
-		conn.SetReadDeadline(time.Now().Add(pongWait))
+		_ = conn.SetReadDeadline(time.Now().Add(pongWait))
 		return nil
 	})
 
@@ -147,9 +147,9 @@ func (rs *RelayServer) HandleConnect(w http.ResponseWriter, r *http.Request) {
 
 	// Configure connection
 	conn.SetReadLimit(maxMessageSize)
-	conn.SetReadDeadline(time.Now().Add(pongWait))
+	_ = conn.SetReadDeadline(time.Now().Add(pongWait))
 	conn.SetPongHandler(func(string) error {
-		conn.SetReadDeadline(time.Now().Add(pongWait))
+		_ = conn.SetReadDeadline(time.Now().Add(pongWait))
 		return nil
 	})
 
@@ -216,7 +216,7 @@ func (rs *RelayServer) forwardMessages(conn *websocket.Conn, sessionID string, i
 		}
 
 		if target != nil {
-			target.SetWriteDeadline(time.Now().Add(writeWait))
+			_ = target.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := target.WriteMessage(messageType, message); err != nil {
 				log.Printf("Failed to forward message: %v", err)
 				pair.mu.Unlock()
@@ -238,7 +238,7 @@ func (rs *RelayServer) keepAlive(conn *websocket.Conn) {
 	for {
 		select {
 		case <-ticker.C:
-			conn.SetWriteDeadline(time.Now().Add(writeWait))
+			_ = conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if err := conn.WriteMessage(websocket.PingMessage, nil); err != nil {
 				return
 			}
