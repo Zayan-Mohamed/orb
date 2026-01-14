@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
@@ -156,7 +157,11 @@ func (fs *SecureFilesystem) Read(path string, offset, length int64) (*protocol.R
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Printf("Warning: failed to close file: %v", err)
+		}
+	}()
 
 	// Get file size
 	info, err := file.Stat()
@@ -211,7 +216,11 @@ func (fs *SecureFilesystem) Write(path string, offset int64, data []byte) (*prot
 	if err != nil {
 		return nil, fmt.Errorf("failed to open file: %w", err)
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			log.Printf("Warning: failed to close file: %v", err)
+		}
+	}()
 
 	// Seek to offset
 	if _, err := file.Seek(offset, io.SeekStart); err != nil {

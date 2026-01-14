@@ -82,7 +82,11 @@ func runShare(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("failed to establish tunnel: %w", err)
 	}
-	defer tun.Close()
+	defer func() {
+		if err := tun.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: failed to close tunnel: %v\n", err)
+		}
+	}()
 
 	fmt.Printf("✓ Connected! Tunnel established.\n")
 	if readOnly {

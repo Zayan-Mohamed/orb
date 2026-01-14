@@ -64,7 +64,9 @@ func NewTunnel(relayURL, sessionID, passcode string, isInitiator bool) (*Tunnel,
 
 	// Perform Noise handshake
 	if err := tunnel.performHandshake(presharedKey, isInitiator); err != nil {
-		conn.Close()
+		if closeErr := conn.Close(); closeErr != nil {
+			return nil, fmt.Errorf("handshake failed: %w (failed to close: %v)", err, closeErr)
+		}
 		return nil, fmt.Errorf("handshake failed: %w", err)
 	}
 

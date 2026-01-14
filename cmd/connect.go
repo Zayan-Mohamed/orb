@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"runtime"
 
 	"github.com/Zayan-Mohamed/orb/internal/tui"
@@ -48,7 +49,11 @@ func runConnect(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return fmt.Errorf("failed to connect: %w", err)
 	}
-	defer tun.Close()
+	defer func() {
+		if err := tun.Close(); err != nil {
+			fmt.Fprintf(os.Stderr, "Warning: failed to close tunnel: %v\n", err)
+		}
+	}()
 
 	fmt.Printf("✓ Connected! Tunnel established.\n")
 

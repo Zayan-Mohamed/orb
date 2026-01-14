@@ -182,7 +182,9 @@ func (rs *RelayServer) HandleConnect(w http.ResponseWriter, r *http.Request) {
 // The relay server never sees plaintext - it's a blind pipe
 func (rs *RelayServer) forwardMessages(conn *websocket.Conn, sessionID string, isSharer bool) {
 	defer func() {
-		conn.Close()
+		if err := conn.Close(); err != nil {
+			log.Printf("Warning: failed to close connection: %v", err)
+		}
 		rs.cleanupConnection(sessionID, isSharer)
 	}()
 
@@ -285,10 +287,14 @@ func (rs *RelayServer) monitorConnections() {
 				// Remove stale connections (30 minutes inactive)
 				if now.Sub(pair.lastPing) > 30*time.Minute {
 					if pair.Sharer != nil {
-						pair.Sharer.Close()
+						if err := pair.Sharer.Close(); err != nil {
+							log.Printf("Warning: failed to close sharer connection: %v", err)
+						}
 					}
 					if pair.Receiver != nil {
-						pair.Receiver.Close()
+						if err := pair.Receiver.Close(); err != nil {
+							log.Printf("Warning: failed to close receiver connection: %v", err)
+						}
 					}
 					delete(rs.connections, sessionID)
 					log.Printf("Removed stale connection: %s", sessionID)
@@ -366,10 +372,14 @@ func (rs *RelayServer) Shutdown() {
 	// Close all connections
 	for _, pair := range rs.connections {
 		if pair.Sharer != nil {
-			pair.Sharer.Close()
+			if err := pair.Sharer.Close(); err != nil {
+				log.Printf("Warning: failed to close sharer connection: %v", err)
+			}
 		}
 		if pair.Receiver != nil {
-			pair.Receiver.Close()
+			if err := pair.Receiver.Close(); err != nil {
+				log.Printf("Warning: failed to close receiver connection: %v", err)
+			}
 		}
 	}
 
