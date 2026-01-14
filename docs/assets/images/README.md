@@ -26,7 +26,7 @@ This directory will contain screen recording GIFs for the documentation.
 
 ## How to Create
 
-See [Creating GIFs Guide](../development/creating-gifs.md) for detailed instructions.
+See [Creating GIFs Guide](../../development/creating-gifs.md) for detailed instructions.
 
 ## Status
 

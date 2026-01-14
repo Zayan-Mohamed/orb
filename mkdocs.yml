@@ -95,6 +95,7 @@ nav:
       - Building: development/building.md
       - Contributing: development/contributing.md
       - API Reference: development/api.md
+      - Creating GIFs: development/creating-gifs.md
   - About:
       - License: about/license.md
       - Changelog: about/changelog.md

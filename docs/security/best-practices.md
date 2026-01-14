@@ -586,5 +586,5 @@ history -c
 
 - Review [Threat Model](threat-model.md)
 - Read [Cryptography Details](cryptography.md)
-- Check [Security Overview](security.md)
+- Check [Security Overview](../security.md)
 - Study [Deployment Security](../deployment/production.md)

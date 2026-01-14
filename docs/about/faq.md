@@ -248,4 +248,4 @@ Orb provides encryption and access controls, but:
 
 - [Documentation](../index.md)
 - [GitHub Discussions](https://github.com/Zayan-Mohamed/orb/discussions)
-- [Security](../security/security.md)
+- [Security](../security.md)

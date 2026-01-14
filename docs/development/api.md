@@ -46,6 +46,15 @@ func DeriveKey(passcode, sessionID []byte) []byte
 func GenerateKeyPair() (private, public []byte, err error)
 ```
 
+#### Noise Protocol {#noise-protocol}
+
+Orb uses the Noise Protocol Framework for secure key exchange and handshake. The implementation follows the Noise_XX pattern:
+
+- **X**: Static key transmitted
+- **X**: Static key transmitted (both parties)
+
+This ensures mutual authentication and forward secrecy.
+
 ### filesystem
 
 **Purpose:** Secure file operations
