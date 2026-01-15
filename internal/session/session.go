@@ -130,13 +130,23 @@ func (sm *SessionManager) GetSession(sessionID string) (*Session, bool) {
 
 // ValidatePasscode validates a passcode for a session (with rate limiting)
 func (sm *SessionManager) ValidatePasscode(sessionID, passcode string) error {
+	// Start timer for constant-time response
+	start := time.Now()
+	defer func() {
+		// Ensure function always takes exactly 100ms to mitigate timing attacks
+		elapsed := time.Since(start)
+		remaining := (100 * time.Millisecond) - elapsed
+		if remaining > 0 {
+			time.Sleep(remaining)
+		}
+	}()
+
 	sm.mu.Lock()
 	defer sm.mu.Unlock()
 
 	session, exists := sm.sessions[sessionID]
 	if !exists {
 		// Return generic error to prevent enumeration
-		time.Sleep(100 * time.Millisecond) // Constant-time response
 		return fmt.Errorf("authentication failed")
 	}
 
@@ -158,8 +168,6 @@ func (sm *SessionManager) ValidatePasscode(sessionID, passcode string) error {
 			session.Locked = true
 			return fmt.Errorf("session locked due to too many failed attempts")
 		}
-		// Constant-time response
-		time.Sleep(100 * time.Millisecond)
 		return fmt.Errorf("authentication failed")
 	}
 
