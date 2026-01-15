@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/Zayan-Mohamed/orb/workflows/Build/badge.svg)](https://github.com/Zayan-Mohamed/orb/actions/workflows/build.yml)
 [![Release](https://github.com/Zayan-Mohamed/orb/workflows/Release/badge.svg)](https://github.com/Zayan-Mohamed/orb/actions/workflows/release.yml)
-[![Go Report Card](https://goreportcard.com/badge/github.com/Zayan-Mohamed/orb)](https://goreportcard.com/report/github.com/Zayan-Mohamed/orb)
+[![Go Report Card](https://goreportcard.com/badge/github.com/Zayan-Mohamed/orb?v=1)](https://goreportcard.com/report/github.com/Zayan-Mohamed/orb)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/Zayan-Mohamed/orb)](go.mod)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue.svg)](https://zayan-mohamed.github.io/orb/)
@@ -324,7 +324,7 @@ mkdocs build
 
 ## Security Disclosure
 
-If you discover a security vulnerability, please email security@orb.example.com. Do not create public issues for security vulnerabilities.
+If you discover a security vulnerability, please email itsm.zayan@gmail.com. Do not create public issues for security vulnerabilities.
 
 ## License
 
