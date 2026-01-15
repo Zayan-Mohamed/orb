@@ -6,10 +6,14 @@
 set -e
 
 VERSION=${VERSION:-"dev"}
+GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 BUILD_DIR="build"
-LDFLAGS="-s -w -X main.version=${VERSION}"
+LDFLAGS="-s -w -X github.com/Zayan-Mohamed/orb/cmd.Version=${VERSION} -X github.com/Zayan-Mohamed/orb/cmd.GitCommit=${GIT_COMMIT} -X github.com/Zayan-Mohamed/orb/cmd.BuildDate=${BUILD_DATE}"
 
 echo "Building Orb v${VERSION}..."
+echo "Git Commit: ${GIT_COMMIT}"
+echo "Build Date: ${BUILD_DATE}"
 echo ""
 
 # Clean build directory

@@ -5,14 +5,17 @@
 ### Option 1: Build from Source
 
 ```bash
-# Clone and build
-cd /home/zayan/Documents/myProjects/orb
+# Clone the repository
+git clone https://github.com/Zayan-Mohamed/orb.git
+cd orb
+
+# Build the project
 go build -o orb .
 
 # Or use make
 make build-local
 
-# Move to PATH
+# Move to PATH (optional)
 sudo mv orb /usr/local/bin/
 ```
 
@@ -24,6 +27,16 @@ sudo mv orb /usr/local/bin/
 
 # Binaries will be in build/ directory
 ls build/
+```
+
+### Option 3: Download Pre-built Binary
+
+Check the [releases page](https://github.com/Zayan-Mohamed/orb/releases) for pre-built binaries for your platform.
+
+## Verify Installation
+
+```bash
+orb --version
 ```
 
 ## Quick Demo (localhost)
@@ -50,11 +63,11 @@ Security notes:
 
 ```bash
 # Create test folder
-mkdir -p /tmp/orb-test
-echo "Hello from Orb!" > /tmp/orb-test/test.txt
+mkdir -p ~/orb-test
+echo "Hello from Orb!" > ~/orb-test/test.txt
 
 # Share it
-orb share /tmp/orb-test --relay http://localhost:8080
+orb share ~/orb-test --relay http://localhost:8080
 ```
 
 Expected output:
@@ -100,7 +113,7 @@ You'll see an interactive file browser. Use:
 2. **Share** (from your machine):
 
    ```bash
-   orb share ./my-documents \
+   orb share ~/my-documents \
      --relay http://your-vps.com:8080 \
      --readonly
    ```
@@ -122,7 +135,7 @@ You'll see an interactive file browser. Use:
 ### Scenario 1: Share Read-Only
 
 ```bash
-orb share ./project-docs --readonly
+orb share ~/project-docs --readonly
 ```
 
 Files can be viewed and downloaded, but not modified or deleted.
@@ -131,7 +144,7 @@ Files can be viewed and downloaded, but not modified or deleted.
 
 ```bash
 # Sharer (read-write)
-orb share ./shared-workspace
+orb share ~/shared-workspace
 
 # Receiver can upload/modify files
 # Use with trusted parties only!
@@ -140,8 +153,8 @@ orb share ./shared-workspace
 ### Scenario 3: Quick File Transfer
 
 ```bash
-# Share
-orb share ./large-video.mp4
+# Share a file
+orb share ~/Downloads/large-video.mp4
 
 # Receiver downloads via TUI
 # Session auto-expires after transfer
@@ -258,7 +271,7 @@ orb relay --listen :8080
 
 ```bash
 orb relay --listen :9090
-orb share ./folder --relay http://localhost:9090
+orb share ~/folder --relay http://localhost:9090
 ```
 
 ### Behind Firewall
@@ -276,10 +289,10 @@ You can run multiple share sessions simultaneously:
 
 ```bash
 # Terminal 1
-orb share ./docs --relay http://relay:8080
+orb share ~/docs --relay http://relay:8080
 
 # Terminal 2
-orb share ./photos --relay http://relay:8080
+orb share ~/photos --relay http://relay:8080
 
 # Different session IDs, isolated sessions
 ```
@@ -329,7 +342,7 @@ orb version
 
 ```bash
 # More verbose output
-orb share ./folder --relay http://localhost:8080 --debug
+orb share ~/folder --relay http://localhost:8080 --debug
 ```
 
 ## What's Next?

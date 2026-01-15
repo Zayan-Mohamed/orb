@@ -1,12 +1,18 @@
 .PHONY: build clean test relay share connect deps
 
+# Version information
+VERSION ?= dev
+GIT_COMMIT := $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+BUILD_DATE := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
+LDFLAGS := -s -w -X github.com/Zayan-Mohamed/orb/cmd.Version=$(VERSION) -X github.com/Zayan-Mohamed/orb/cmd.GitCommit=$(GIT_COMMIT) -X github.com/Zayan-Mohamed/orb/cmd.BuildDate=$(BUILD_DATE)
+
 # Build all binaries
 build:
 	@./build.sh
 
 # Build single binary for current platform
 build-local:
-	go build -o orb .
+	go build -ldflags="$(LDFLAGS)" -o orb .
 
 # Install dependencies
 deps:

@@ -13,6 +13,14 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+const (
+	// Timeout constants
+	handshakeReadTimeout  = 120 * time.Second // Increased for slow connections 
+	handshakeWriteTimeout = 30 * time.Second
+	dataReadTimeout       = 120 * time.Second // Increased for large file transfers 
+	dataWriteTimeout      = 30 * time.Second
+)
+
 // Tunnel represents an encrypted tunnel between peers
 type Tunnel struct {
 	conn       *websocket.Conn
@@ -200,7 +208,7 @@ func (t *Tunnel) SendFrame(frame *protocol.Frame) error {
 	}
 
 	// Send over WebSocket
-	_ = t.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+	_ = t.conn.SetWriteDeadline(time.Now().Add(dataWriteTimeout))
 	if err := t.conn.WriteMessage(websocket.BinaryMessage, encrypted); err != nil {
 		return fmt.Errorf("failed to send: %w", err)
 	}
@@ -218,7 +226,7 @@ func (t *Tunnel) ReceiveFrame() (*protocol.Frame, error) {
 	}
 
 	// Receive from WebSocket
-	_ = t.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	_ = t.conn.SetReadDeadline(time.Now().Add(dataReadTimeout))
 	_, encrypted, err := t.conn.ReadMessage()
 	if err != nil {
 		return nil, fmt.Errorf("failed to receive: %w", err)
@@ -252,13 +260,13 @@ func (t *Tunnel) sendRawFrame(frame *protocol.Frame) error {
 		return err
 	}
 
-	_ = t.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
+	_ = t.conn.SetWriteDeadline(time.Now().Add(handshakeWriteTimeout))
 	return t.conn.WriteMessage(websocket.BinaryMessage, buf.Bytes())
 }
 
 // recvRawFrame receives an unencrypted frame (for handshake only)
 func (t *Tunnel) recvRawFrame() (*protocol.Frame, error) {
-	_ = t.conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	_ = t.conn.SetReadDeadline(time.Now().Add(handshakeReadTimeout))
 	_, data, err := t.conn.ReadMessage()
 	if err != nil {
 		return nil, err
