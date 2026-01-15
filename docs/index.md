@@ -1,7 +1,7 @@
 # Welcome to Orb
 
 <div align="center">
-  <h1>🛡️ Orb - Zero-Trust Folder Tunneling</h1>
+  <h1> Orb - Zero-Trust Folder Tunneling</h1>
   <p><strong>Secure file sharing with end-to-end encryption</strong></p>
   <p>No accounts • No cloud • No port forwarding</p>
 </div>
@@ -14,13 +14,13 @@ Orb is a **production-ready** zero-trust file sharing tool that allows you to se
 
 ### Key Features
 
-✅ **Zero-Trust Architecture** - The relay server never sees plaintext data  
-✅ **Strong Cryptography** - Argon2id, Noise Protocol, ChaCha20-Poly1305  
-✅ **Cross-Platform** - Works on Linux, macOS, and Windows  
-✅ **NAT-Safe** - Works behind firewalls without port forwarding  
-✅ **No Accounts** - No registration, no authentication servers  
-✅ **Single Binary** - No dependencies, just download and run  
-✅ **Terminal UI** - Interactive file browser that works everywhere
+**Zero-Trust Architecture** - The relay server never sees plaintext data  
+**Strong Cryptography** - Argon2id, Noise Protocol, ChaCha20-Poly1305  
+**Cross-Platform** - Works on Linux, macOS, and Windows  
+**NAT-Safe** - Works behind firewalls without port forwarding  
+**No Accounts** - No registration, no authentication servers  
+**Single Binary** - No dependencies, just download and run  
+**Terminal UI** - Interactive file browser that works everywhere
 
 ## Quick Example
 
@@ -84,23 +84,23 @@ Opens an interactive file browser where you can:
 
 ## Use Cases
 
-### 🚀 Development Teams
+### Development Teams
 
 Share build artifacts, logs, or config files between team members without uploading to cloud storage.
 
-### 🔒 Security Auditing
+### Security Auditing
 
 Share sensitive files for security review without leaving traces on third-party servers.
 
-### 📦 Large File Transfer
+### Large File Transfer
 
 Transfer large files between machines without size limits or cloud storage costs.
 
-### 🏢 Remote Work
+### Remote Work
 
 Access files from home server while traveling, without VPN or port forwarding.
 
-### 🛠️ DevOps
+### DevOps DevOps
 
 Share deployment artifacts or debugging information with contractors or remote teams.
 
@@ -108,41 +108,29 @@ Share deployment artifacts or debugging information with contractors or remote t
 
 Choose your path:
 
-<div class="grid cards" markdown>
+### Quick Start
 
-- :material-clock-fast:{ .lg .middle } **Quick Start**
+Get up and running in 5 minutes.
 
-  ***
+[Quick Start Guide](quickstart.md)
 
-  Get up and running in 5 minutes
+### Installation
 
-  [:octicons-arrow-right-24: Quick Start Guide](quickstart.md)
+Install Orb on your system.
 
-- :material-download:{ .lg .middle } **Installation**
+[Install Now](getting-started/installation.md)
 
-  ***
+### User Guide
 
-  Install Orb on your system
+Learn how to use all features.
 
-  [:octicons-arrow-right-24: Install Now](getting-started/installation.md)
+[Read Guide](user-guide/commands.md)
 
-- :material-book-open-variant:{ .lg .middle } **User Guide**
+### Security
 
-  ***
+Understand the security architecture.
 
-  Learn how to use all features
-
-  [:octicons-arrow-right-24: Read Guide](user-guide/commands.md)
-
-- :material-shield-lock:{ .lg .middle } **Security**
-
-  ***
-
-  Understand the security architecture
-
-  [:octicons-arrow-right-24: Security Details](security.md)
-
-</div>
+[Security Details](security.md)
 
 ## Why Orb?
 
@@ -150,19 +138,19 @@ Choose your path:
 
 Traditional file sharing requires:
 
-- ❌ Cloud accounts
-- ❌ Upload time
-- ❌ Storage limits
-- ❌ Subscription fees
-- ❌ Trust in third parties
+- Cloud accounts
+- Upload time
+- Storage limits
+- Subscription fees
+- Trust in third parties
 
 Orb provides:
 
-- ✅ Direct peer-to-peer sharing
-- ✅ Instant access (no uploads)
-- ✅ No size limits
-- ✅ Free and open source
-- ✅ Zero-trust architecture
+- Direct peer-to-peer sharing
+- Instant access (no uploads)
+- No size limits
+- Free and open source
+- Zero-trust architecture
 
 ### Designed for Security
 
@@ -176,7 +164,7 @@ Orb is built from the ground up with security in mind:
 
 ## Community & Support
 
-- **Documentation**: You're reading it! 📚
+- **Documentation**: You're reading it!
 - **GitHub**: [github.com/Zayan-Mohamed/orb](https://github.com/Zayan-Mohamed/orb)
 - **Issues**: Report bugs and request features
 - **Discussions**: Ask questions and share experiences
@@ -187,6 +175,6 @@ Orb is open source software licensed under the [MIT License](about/license.md).
 
 ---
 
-<div align="center">
-  <p><strong>Stay safe. Stay paranoid. 🛡️</strong></p>
-</div>
+## Summary
+
+Orb provides secure, zero-trust file sharing with end-to-end encryption. Focus on security and privacy drives every design decision.

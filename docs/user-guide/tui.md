@@ -25,10 +25,10 @@ orb connect --session abc123 --passcode xyz789
 ┌─ Remote Files ─────────────────────────────────────┐
 │ Current: /documents/projects                       │
 ├────────────────────────────────────────────────────┤
-│  📁 subfolder/                                     │
-│  📄 report.pdf                                     │
-│  📄 data.xlsx                                      │
-│  📄 notes.txt                                      │
+│   subfolder/                                     │
+│   report.pdf                                     │
+│   data.xlsx                                      │
+│   notes.txt                                      │
 │                                                     │
 │                                                     │
 └────────────────────────────────────────────────────┘
@@ -40,7 +40,7 @@ orb connect --session abc123 --passcode xyz789
 - **Header**: Shows current directory path
 - **File List**: Scrollable list of files and directories
 - **Status Bar**: Helpful key hints and messages
-- **Icons**: 📁 for directories, 📄 for files
+- **Icons**: for directories, for files
 
 ## Keyboard Controls
 
@@ -119,17 +119,17 @@ Download multiple files by:
 ### Success Messages
 
 ```
-✓ Downloaded: file.txt
-✓ Directory loaded
-✓ Ready
+[OK] Downloaded: file.txt
+[OK] Directory loaded
+[OK] Ready
 ```
 
 ### Error Messages
 
 ```
-✗ Failed to download: permission denied
-✗ Cannot read directory
-✗ Connection lost
+[ERROR] Failed to download: permission denied
+[ERROR] Cannot read directory
+[ERROR] Connection lost
 ```
 
 ### Loading States
@@ -169,24 +169,24 @@ Currently not implemented. Future versions may support:
 
 ### Directories
 
-Displayed with 📁 icon:
+Displayed with icon:
 
 ```
-📁 documents/
-📁 photos/
-📁 projects/
+ documents/
+ photos/
+ projects/
 ```
 
 Press Enter to navigate into directory.
 
 ### Regular Files
 
-Displayed with 📄 icon:
+Displayed with icon:
 
 ```
-📄 README.md
-📄 report.pdf
-📄 data.json
+ README.md
+ report.pdf
+ data.json
 ```
 
 Press Enter to download file.
@@ -196,9 +196,9 @@ Press Enter to download file.
 Hidden files (starting with `.`) are shown:
 
 ```
-📄 .gitignore
-📄 .env
-📁 .config/
+ .gitignore
+ .env
+ .config/
 ```
 
 ### Symlinks
@@ -429,33 +429,33 @@ Actions:
 
 **TUI Browser:**
 
-- ✅ Interactive browsing
-- ✅ Visual directory structure
-- ✅ Easy navigation
-- ❌ No automation
+- Interactive browsing
+- Visual directory structure
+- Easy navigation
+- No automation
 
 **CLI Download:**
 
-- ✅ Scriptable
-- ✅ Batch operations
-- ❌ No browsing (yet)
-- ❌ Manual path specification
+- Scriptable
+- Batch operations
+- No browsing (yet)
+- Manual path specification
 
 ### vs. GUI Client
 
 **TUI Browser:**
 
-- ✅ Works over SSH
-- ✅ No GUI required
-- ✅ Lightweight
-- ❌ Limited features
+- Works over SSH
+- No GUI required
+- Lightweight
+- Limited features
 
 **GUI Client (future):**
 
-- ✅ Mouse support
-- ✅ Drag and drop
-- ❌ Requires desktop
-- ❌ Not implemented
+- Mouse support
+- Drag and drop
+- Requires desktop
+- Not implemented
 
 ## Future Enhancements
 

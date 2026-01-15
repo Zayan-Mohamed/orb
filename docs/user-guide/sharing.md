@@ -68,13 +68,13 @@ Relay: ws://localhost:8080
 ### 1. Choose What to Share Carefully
 
 ```bash
-# ✅ Good: Specific directory
+# Good: Specific directory
 orb share ~/project/public-docs
 
-# ⚠️ Risky: Entire home directory
+# Risky: Entire home directory
 orb share ~
 
-# ❌ Bad: System directories
+# Bad: System directories
 orb share /
 ```
 
@@ -133,12 +133,15 @@ timeout 30m orb share ~/sensitive-docs
 
 Orb shares are inherently read-only. The connector can:
 
-- ✅ List files
-- ✅ Read file contents
-- ✅ Download files
-- ❌ Modify files
-- ❌ Delete files
-- ❌ Upload files
+- List files
+- Read file contents
+- Download files
+
+The connector cannot:
+
+- Modify files
+- Delete files
+- Upload files
 
 ### Multiple Connections
 
@@ -170,10 +173,10 @@ Orb enforces strict path sandboxing:
 ```
 Shared: /home/user/project
 Accessible:
-  ✅ /home/user/project/file.txt
-  ✅ /home/user/project/subdir/file.txt
-  ❌ /home/user/other-project/file.txt
-  ❌ /home/user/project/../sensitive.txt
+  /home/user/project/file.txt
+  /home/user/project/subdir/file.txt
+  /home/user/other-project/file.txt
+  /home/user/project/../sensitive.txt
 ```
 
 Protection against:

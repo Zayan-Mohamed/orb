@@ -109,52 +109,52 @@ ciphertext := cipher.Seal(nonce, nonce, plaintext, nil)
 
 **Input Validation**:
 
-- ✅ Session IDs: Validated format and length
-- ✅ Passcodes: No injection possible (used as bytes)
-- ✅ File paths: Sanitized and bounded to shared directory
-- ✅ Frame types: Validated against whitelist
-- ✅ Frame sizes: Limited to 1 MB maximum
+- Session IDs: Validated format and length
+- Passcodes: No injection possible (used as bytes)
+- File paths: Sanitized and bounded to shared directory
+- Frame types: Validated against whitelist
+- Frame sizes: Limited to 1 MB maximum
 
 **State Management**:
 
-- ✅ Session expiration: 24-hour timeout
-- ✅ Connection timeout: 60-second read timeout
-- ✅ Failed attempt tracking: Lock after 5 failures
-- ✅ Replay protection: Nonce counter increments
+- Session expiration: 24-hour timeout
+- Connection timeout: 60-second read timeout
+- Failed attempt tracking: Lock after 5 failures
+- Replay protection: Nonce counter increments
 
 **Resource Limits**:
 
-- ✅ Message size: 2 MB WebSocket limit
-- ✅ File read: 10 MB per read operation
-- ✅ Memory: Bounded buffer sizes
-- ✅ Connections: Per-session limits enforced
+- Message size: 2 MB WebSocket limit
+- File read: 10 MB per read operation
+- Memory: Bounded buffer sizes
+- Connections: Per-session limits enforced
 
 ### Relay Server Attack Surface
 
 **Minimal Trusted Computing Base**:
 
-- ✅ No authentication logic
-- ✅ No decryption capability
-- ✅ No file storage
-- ✅ No logging of payloads
+- No authentication logic
+- No decryption capability
+- No file storage
+- No logging of payloads
 
 **DoS Protection**:
 
-- ✅ Connection timeout: 60 seconds idle
-- ✅ Session cleanup: Automatic expiration
-- ✅ Rate limiting: Per-IP connection limits (TODO)
-- ✅ Resource limits: WebSocket buffer sizes
+- Connection timeout: 60 seconds idle
+- Session cleanup: Automatic expiration
+- Rate limiting: Per-IP connection limits (TODO)
+- Resource limits: WebSocket buffer sizes
 
 **Information Leakage**:
 
-- ✅ Generic error messages
-- ✅ No session enumeration
-- ✅ No timing attacks (constant-time comparison)
-- ✅ No metadata logging
+- Generic error messages
+- No session enumeration
+- No timing attacks (constant-time comparison)
+- No metadata logging
 
 ## Security Checklist
 
-### Cryptography ✅
+### Cryptography 
 
 - [x] Key derivation uses Argon2id
 - [x] Handshake uses Noise Protocol
@@ -163,7 +163,7 @@ ciphertext := cipher.Seal(nonce, nonce, plaintext, nil)
 - [x] Keys are zeroized after use
 - [x] Constant-time comparisons
 
-### Authentication ✅
+### Authentication 
 
 - [x] Mutual authentication required
 - [x] No static secrets
@@ -171,7 +171,7 @@ ciphertext := cipher.Seal(nonce, nonce, plaintext, nil)
 - [x] Failed attempt rate limiting
 - [x] Session lockout after failures
 
-### Authorization ✅
+### Authorization 
 
 - [x] Path traversal prevention
 - [x] Symlink escape detection
@@ -179,7 +179,7 @@ ciphertext := cipher.Seal(nonce, nonce, plaintext, nil)
 - [x] No remote execution
 - [x] Sandboxed operations
 
-### Network Security ✅
+### Network Security 
 
 - [x] All data encrypted end-to-end
 - [x] Replay protection
@@ -187,7 +187,7 @@ ciphertext := cipher.Seal(nonce, nonce, plaintext, nil)
 - [x] Connection timeouts
 - [x] NAT traversal
 
-### Privacy ✅
+### Privacy 
 
 - [x] Relay server is blind
 - [x] No passcode logging
@@ -231,8 +231,8 @@ Security updates are released immediately and backported to supported versions.
 
 | Version | Supported           |
 | ------- | ------------------- |
-| 1.x     | ✅ Yes              |
-| < 1.0   | ❌ No (pre-release) |
+| 1.x     | Yes              |
+| < 1.0   | No (pre-release) |
 
 ## Reporting Vulnerabilities
 
@@ -256,7 +256,7 @@ Security updates are released immediately and backported to supported versions.
 
 ## Security Audit Status
 
-**Status**: ⚠️ Not yet audited
+**Status**: Not yet audited
 
 **Recommended**: Before using in production, conduct a security audit of:
 

@@ -295,4 +295,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ---
 
-Thank you for contributing to Orb! Together, we can build secure and user-friendly tools. 🛡️
+Thank you for contributing to Orb! Together, we can build secure and user-friendly tools.

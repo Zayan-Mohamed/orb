@@ -33,7 +33,7 @@ orb share ~/files
 
 ### Secure Passcode Transmission
 
-**✅ Good methods:**
+**Good methods:**
 
 - Encrypted messaging (Signal, WhatsApp, Telegram)
 - Password manager shared vault
@@ -41,7 +41,7 @@ orb share ~/files
 - Encrypted email (PGP)
 - Phone call
 
-**❌ Bad methods:**
+**Bad methods:**
 
 - Plain SMS
 - Email without encryption
@@ -88,21 +88,21 @@ orb share ~/files
 
 ### Choose Carefully What to Share
 
-**✅ Safe to share:**
+**Safe to share:**
 
 - Public documents
 - Project files (non-sensitive)
 - Photos for review
 - Deliverables for clients
 
-**⚠️ Share with caution:**
+**Share with caution:**
 
 - Work documents
 - Personal files
 - Database backups
 - Configuration files
 
-**❌ Never share:**
+**Never share:**
 
 - System directories (`/`, `/etc`, `/usr`)
 - Home directory root (`~`)
@@ -112,13 +112,13 @@ orb share ~/files
 ### Share Specific Subdirectories
 
 ```bash
-# ✅ Good: Specific directory
+# Good: Specific directory
 orb share ~/projects/client-deliverables
 
-# ⚠️ Risky: Entire projects folder
+# Risky: Entire projects folder
 orb share ~/projects
 
-# ❌ Bad: Entire home directory
+# Bad: Entire home directory
 orb share ~
 ```
 
@@ -509,33 +509,33 @@ history -c
 
 ### Against Eavesdropping
 
-✅ End-to-end encryption (ChaCha20-Poly1305)
-✅ Use TLS relay (wss://)
-✅ Avoid untrusted networks
+End-to-end encryption (ChaCha20-Poly1305)
+Use TLS relay (wss://)
+Avoid untrusted networks
 
 ### Against Man-in-the-Middle
 
-✅ Mutual authentication (Noise Protocol)
-✅ Verify credentials out-of-band
-✅ Use known relay servers
+Mutual authentication (Noise Protocol)
+Verify credentials out-of-band
+Use known relay servers
 
 ### Against Brute Force
 
-✅ Strong passcodes
-✅ Argon2id rate limiting
-✅ 5-attempt lockout
+Strong passcodes
+Argon2id rate limiting
+5-attempt lockout
 
 ### Against Malicious Files
 
-✅ Scan downloads
-✅ Verify sender
-✅ Isolate downloads
+Scan downloads
+Verify sender
+Isolate downloads
 
 ### Against Insider Threats
 
-✅ Least privilege access
-✅ Audit logs
-✅ Time-limited sessions
+Least privilege access
+Audit logs
+Time-limited sessions
 
 ## Security Training
 
@@ -561,24 +561,24 @@ history -c
 
 ### GDPR
 
-- Encryption at rest and in transit ✅
-- Data minimization ✅
-- Right to erasure ✅ (stop sharing)
-- Data portability ✅
+- Encryption at rest and in transit 
+- Data minimization 
+- Right to erasure (stop sharing)
+- Data portability 
 
 ### HIPAA
 
-- Access controls ✅
-- Audit logging ✅ (if enabled)
-- Encryption ✅
-- Transmission security ✅
+- Access controls 
+- Audit logging (if enabled)
+- Encryption 
+- Transmission security 
 
 ### SOC 2
 
-- Encryption ✅
-- Access logging ✅
-- Availability ✅
-- Confidentiality ✅
+- Encryption 
+- Access logging 
+- Availability 
+- Confidentiality 
 
 **Note:** Orb provides technical controls. Organizational policies and procedures required for full compliance.
 

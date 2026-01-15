@@ -57,10 +57,10 @@ After connecting, you'll see the TUI file browser:
 
 ```
 ┌─ Remote Files ────────────────────────┐
-│  📁 documents/                        │
-│  📁 photos/                           │
-│  📄 README.md                         │
-│  📄 report.pdf                        │
+│   documents/                        │
+│   photos/                           │
+│   README.md                         │
+│   report.pdf                        │
 └───────────────────────────────────────┘
 ```
 
@@ -150,14 +150,14 @@ orb connect --session <ID> --passcode <CODE>
 
 ## Security Notes
 
-🔒 **Your files are secure:**
+ **Your files are secure:**
 
 - End-to-end encrypted with ChaCha20-Poly1305
 - Relay server cannot see file contents
 - Passcode protects session access
 - Sessions expire after 24 hours
 
-⚠️ **Important:**
+**Important:**
 
 - Share the passcode securely (encrypted messaging, in person)
 - Don't reuse session credentials

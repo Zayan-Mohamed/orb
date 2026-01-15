@@ -1,6 +1,6 @@
 # Orb Deployment Checklist
 
-## ✅ Project Status
+## Project Status
 
 ### Implementation Complete
 
@@ -49,7 +49,7 @@ Binary: orb (16 MB, x86-64)
 
 ## Security Checklist
 
-### ✅ Cryptography
+### Cryptography
 
 - [x] Argon2id for key derivation (memory-hard)
 - [x] Noise Protocol for handshake
@@ -59,7 +59,7 @@ Binary: orb (16 MB, x86-64)
 - [x] Constant-time comparisons
 - [x] Key zeroization after use
 
-### ✅ Authentication
+### Authentication
 
 - [x] Mutual authentication (both peers prove knowledge)
 - [x] No static secrets
@@ -68,7 +68,7 @@ Binary: orb (16 MB, x86-64)
 - [x] Session lockout
 - [x] Generic error messages (no enumeration)
 
-### ✅ Authorization
+### Authorization
 
 - [x] Path sanitization
 - [x] Symlink escape prevention
@@ -76,7 +76,7 @@ Binary: orb (16 MB, x86-64)
 - [x] No remote execution
 - [x] Sandboxed operations
 
-### ✅ Network Security
+### Network Security
 
 - [x] End-to-end encryption
 - [x] Replay protection (unique nonces)
@@ -85,7 +85,7 @@ Binary: orb (16 MB, x86-64)
 - [x] Connection timeouts
 - [x] NAT traversal
 
-### ✅ Privacy
+### Privacy
 
 - [x] Relay is blind (never sees plaintext)
 - [x] No passcode logging
@@ -336,16 +336,16 @@ CMD ["orb", "relay", "--listen", ":8080"]
 
 ---
 
-## Project Status: ✅ READY FOR DEPLOYMENT
+## Project Status: READY FOR DEPLOYMENT
 
 Orb is production-ready with:
 
-- ✅ Complete implementation
-- ✅ Strong security
-- ✅ Cross-platform support
-- ✅ Comprehensive docs
-- ✅ Build system
-- ✅ No critical TODOs
+- Complete implementation
+- Strong security
+- Cross-platform support
+- Comprehensive docs
+- Build system
+- No critical TODOs
 
 **Recommended**: Complete security audit before public release.
 

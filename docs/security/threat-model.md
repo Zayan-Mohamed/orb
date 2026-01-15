@@ -10,14 +10,14 @@ Orb is designed to securely share files between two parties through an untrusted
 
 ### Trusted Components
 
-**✅ Client Endpoints:**
+**Client Endpoints:**
 
 - User's local machines are not compromised
 - Operating system is trusted
 - Go runtime is memory-safe
 - Crypto libraries are correct
 
-**✅ Users:**
+**Users:**
 
 - Users protect their passcodes
 - Users authenticate each other out-of-band
@@ -25,14 +25,14 @@ Orb is designed to securely share files between two parties through an untrusted
 
 ### Untrusted Components
 
-**❌ Relay Server:**
+**Relay Server:**
 
 - Considered "honest-but-curious"
 - May log metadata
 - May be compromised
 - Cannot break encryption
 
-**❌ Network:**
+**Network:**
 
 - Passive eavesdroppers present
 - Active attackers may inject/modify
@@ -56,21 +56,21 @@ Orb is designed to securely share files between two parties through an untrusted
 
 **Protections:**
 
-✅ **End-to-End Encryption:**
+**End-to-End Encryption:**
 
 ```
 All data encrypted with ChaCha20-Poly1305
 Relay sees only ciphertext
 ```
 
-✅ **Forward Secrecy:**
+**Forward Secrecy:**
 
 ```
 Ephemeral keys per session
 Past sessions secure even if passcode compromised later
 ```
 
-✅ **Minimal Metadata:**
+**Minimal Metadata:**
 
 ```
 Session IDs are random
@@ -99,7 +99,7 @@ No user identifiers transmitted
 
 **Protections:**
 
-✅ **Mutual Authentication:**
+**Mutual Authentication:**
 
 ```
 Noise Protocol handshake
@@ -107,14 +107,14 @@ Both parties prove knowledge of passcode
 Cannot be impersonated without passcode
 ```
 
-✅ **Authenticated Encryption:**
+**Authenticated Encryption:**
 
 ```
 Poly1305 MAC prevents tampering
 Modified messages rejected
 ```
 
-✅ **Replay Protection:**
+**Replay Protection:**
 
 ```
 Nonce counter prevents replays
@@ -145,7 +145,7 @@ Each message is unique
 
 **Protections:**
 
-✅ **Blind Relay Design:**
+**Blind Relay Design:**
 
 ```
 Relay has no decryption keys
@@ -153,7 +153,7 @@ Cannot see plaintext data
 End-to-end encryption bypasses relay
 ```
 
-✅ **No Authentication at Relay:**
+**No Authentication at Relay:**
 
 ```
 Relay doesn't know user identities
@@ -161,7 +161,7 @@ Session IDs are random
 No persistent accounts
 ```
 
-✅ **Tamper Detection:**
+**Tamper Detection:**
 
 ```
 Authentication tags detect modification
@@ -194,7 +194,7 @@ Encrypted handshake prevents impersonation
 
 **Protections:**
 
-✅ **Path Sanitization:**
+**Path Sanitization:**
 
 ```go
 // internal/filesystem/secure_fs.go
@@ -211,14 +211,14 @@ func sanitizePath(base, requested string) (string, error) {
 }
 ```
 
-✅ **Symlink Protection:**
+**Symlink Protection:**
 
 ```
 Symlinks resolved and validated
 Cannot escape shared directory
 ```
 
-✅ **Resource Limits:**
+**Resource Limits:**
 
 ```
 Max file read: 10 MB per request
@@ -226,7 +226,7 @@ Max message size: 2 MB
 Connection timeouts: 60 seconds
 ```
 
-✅ **Read-Only Access:**
+**Read-Only Access:**
 
 ```
 No write operations supported
@@ -257,7 +257,7 @@ No remote execution
 
 **Protections:**
 
-✅ **Argon2id Key Derivation:**
+**Argon2id Key Derivation:**
 
 ```
 Time: 3 iterations (~100ms per attempt)
@@ -265,7 +265,7 @@ Memory: 64 MB per attempt
 GPU/ASIC resistant
 ```
 
-✅ **Rate Limiting:**
+**Rate Limiting:**
 
 ```
 5 failed attempts = session lockout
@@ -273,7 +273,7 @@ Generic error messages
 No timing attacks
 ```
 
-✅ **Strong Randomness:**
+**Strong Randomness:**
 
 ```
 Session IDs: 12 random characters (62^12 ≈ 3×10^21)
@@ -302,10 +302,10 @@ Passcodes: High entropy random strings
 
 **Orb Protection:**
 
-- ✅ Traffic encrypted end-to-end
-- ✅ No plaintext metadata
-- ⚠️ Connection timing visible
-- ⚠️ Session IDs in WebSocket headers
+- Traffic encrypted end-to-end
+- No plaintext metadata
+- Connection timing visible
+- Session IDs in WebSocket headers
 
 **Mitigation:**
 
@@ -327,10 +327,10 @@ Passcodes: High entropy random strings
 
 **Orb Protection:**
 
-- ✅ End-to-end encryption
-- ✅ Relay has no keys
-- ✅ Perfect forward secrecy
-- ✅ Cannot decrypt without passcode
+- End-to-end encryption
+- Relay has no keys
+- Perfect forward secrecy
+- Cannot decrypt without passcode
 
 **Mitigation:**
 
@@ -352,8 +352,8 @@ Passcodes: High entropy random strings
 
 **Orb Protection:**
 
-- ❌ Cannot protect against endpoint compromise
-- ❌ If machine is pwned, game over
+- Cannot protect against endpoint compromise
+- If machine is pwned, game over
 
 **Mitigation:**
 
@@ -375,8 +375,8 @@ Passcodes: High entropy random strings
 
 **Orb Protection:**
 
-- ✅ Technical controls work correctly
-- ❌ Cannot prevent user from sharing passcode
+- Technical controls work correctly
+- Cannot prevent user from sharing passcode
 
 **Mitigation:**
 
@@ -399,8 +399,8 @@ Passcodes: High entropy random strings
 
 **Orb Protection:**
 
-- ❌ Cannot prevent authorized access abuse
-- ✅ Can log and audit activity
+- Cannot prevent authorized access abuse
+- Can log and audit activity
 
 **Mitigation:**
 
@@ -415,14 +415,14 @@ Passcodes: High entropy random strings
 
 | Threat                | Protection                  |
 | --------------------- | --------------------------- |
-| Network eavesdropping | ✅ End-to-end encryption    |
-| Man-in-the-middle     | ✅ Mutual authentication    |
-| Malicious relay       | ✅ Zero-knowledge design    |
-| Path traversal        | ✅ Sandboxing               |
-| Replay attacks        | ✅ Nonce counters           |
-| Brute force           | ✅ Argon2id + rate limiting |
-| Data tampering        | ✅ Authentication tags      |
-| Session hijacking     | ✅ Cryptographic binding    |
+| Network eavesdropping | End-to-end encryption    |
+| Man-in-the-middle     | Mutual authentication    |
+| Malicious relay       | Zero-knowledge design    |
+| Path traversal        | Sandboxing               |
+| Replay attacks        | Nonce counters           |
+| Brute force           | Argon2id + rate limiting |
+| Data tampering        | Authentication tags      |
+| Session hijacking     | Cryptographic binding    |
 
 ### What Orb Does NOT Protect
 
@@ -482,22 +482,22 @@ Passcodes: High entropy random strings
 
 **GDPR:**
 
-- ✅ Encryption in transit
-- ✅ Minimal data collection
-- ✅ Right to erasure (stop sharing)
-- ✅ Data minimization
+- Encryption in transit
+- Minimal data collection
+- Right to erasure (stop sharing)
+- Data minimization
 
 **HIPAA:**
 
-- ✅ Technical safeguards
-- ⚠️ Organizational policies required
-- ⚠️ Business associate agreements needed
+- Technical safeguards
+- Organizational policies required
+- Business associate agreements needed
 
 **CCPA:**
 
-- ✅ Consumer privacy
-- ✅ Data security
-- ✅ No sale of data
+- Consumer privacy
+- Data security
+- No sale of data
 
 ### Export Controls
 
@@ -511,21 +511,21 @@ Passcodes: High entropy random strings
 
 ### High Risk
 
-❌ **Endpoint compromise** → Complete system compromise
-❌ **Passcode phishing** → Unauthorized access
-❌ **Physical device theft** → Data exposure if disk not encrypted
+**Endpoint compromise** → Complete system compromise
+**Passcode phishing** → Unauthorized access
+**Physical device theft** → Data exposure if disk not encrypted
 
 ### Medium Risk
 
-⚠️ **Traffic analysis** → Metadata leakage
-⚠️ **Malicious relay** → DoS, traffic analysis
-⚠️ **Weak passcodes** → Brute force possible
+**Traffic analysis** → Metadata leakage
+**Malicious relay** → DoS, traffic analysis
+**Weak passcodes** → Brute force possible
 
 ### Low Risk
 
-✅ **Network eavesdropping** → Encrypted
-✅ **MITM attacks** → Authenticated
-✅ **Path traversal** → Mitigated
+**Network eavesdropping** → Encrypted
+**MITM attacks** → Authenticated
+**Path traversal** → Mitigated
 
 ## Future Enhancements
 

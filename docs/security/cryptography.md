@@ -404,19 +404,19 @@ func Random(n int) []byte {
 
 ### What Orb Protects Against
 
-✅ **Eavesdropping**: All data encrypted
-✅ **Tampering**: Authentication tags prevent modification
-✅ **Replay**: Nonce prevents replay attacks
-✅ **MITM**: Mutual authentication via passcode
-✅ **Brute Force**: Argon2id makes attempts expensive
+**Eavesdropping**: All data encrypted
+**Tampering**: Authentication tags prevent modification
+**Replay**: Nonce prevents replay attacks
+**MITM**: Mutual authentication via passcode
+**Brute Force**: Argon2id makes attempts expensive
 
 ### What Orb Does NOT Protect Against
 
-❌ **Endpoint Compromise**: If client hacked, files accessible
-❌ **Weak Passcodes**: User must choose strong passcode
-❌ **Social Engineering**: If passcode shared with attacker
-❌ **Side Channels**: Advanced attacks (cache timing, etc.)
-❌ **Quantum Computers**: X25519 vulnerable to quantum attacks
+**Endpoint Compromise**: If client hacked, files accessible
+**Weak Passcodes**: User must choose strong passcode
+**Social Engineering**: If passcode shared with attacker
+**Side Channels**: Advanced attacks (cache timing, etc.)
+**Quantum Computers**: X25519 vulnerable to quantum attacks
 
 ## Future Enhancements
 

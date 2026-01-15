@@ -341,4 +341,4 @@ orb share ./folder --relay http://localhost:8080 --debug
 
 ---
 
-**Remember**: Orb is designed for security. Stay paranoid, stay safe! 🛡️
+**Note**: Orb is designed for security. Follow best practices for secure file sharing.

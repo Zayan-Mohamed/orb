@@ -276,13 +276,13 @@ Error: failed to initialize browser
 
 1. **Use supported terminal:**
 
-   - ✅ iTerm2 (macOS)
-   - ✅ Terminal.app (macOS)
-   - ✅ Windows Terminal
-   - ✅ Alacritty
-   - ✅ GNOME Terminal
-   - ❌ Dumb terminal
-   - ❌ Non-interactive shell
+   - iTerm2 (macOS)
+   - Terminal.app (macOS)
+   - Windows Terminal
+   - Alacritty
+   - GNOME Terminal
+   - Dumb terminal
+   - Non-interactive shell
 
 2. **Check TTY:**
 

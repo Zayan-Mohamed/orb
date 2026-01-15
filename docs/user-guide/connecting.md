@@ -58,9 +58,9 @@ The connector:
 [INFO] Launching file browser...
 
 ┌─ Remote Files ─────────────────┐
-│  📁 documents/                 │
-│  📁 photos/                    │
-│  📄 README.md                  │
+│   documents/                 │
+│   photos/                    │
+│   README.md                  │
 └────────────────────────────────┘
 ```
 

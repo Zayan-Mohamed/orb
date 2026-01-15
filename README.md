@@ -10,7 +10,7 @@
 
 Orb is a secure, terminal-first utility that allows you to share a local folder across the internet using end-to-end encryption. No accounts, no cloud storage, no port forwarding required.
 
-## 📺 Demo
+## Demo
 
 ### Sharing a Folder
 
@@ -33,17 +33,17 @@ _Interactive TUI browser for secure file access_
 <!-- ![Orb Complete Demo](docs/assets/images/orb-complete-demo.gif)
 _Complete workflow: Share → Connect → Browse → Download_ -->
 
-## ✨ Features
+## Features
 
-- **🔒 Zero-Trust Architecture**: The relay server never sees plaintext data
-- **🔐 Strong Cryptography**: Argon2id for key derivation, Noise Protocol for handshake, ChaCha20-Poly1305 for transport encryption
-- **🖥️ Cross-Platform**: Works on Linux, macOS, and Windows
-- **🌐 NAT-Safe**: All connections are outbound, works behind firewalls
-- **📁 TUI File Browser**: Interactive terminal interface for browsing and downloading files
-- **⏰ No Long-Term Secrets**: Sessions expire automatically
-- **🛡️ Secure by Design**: Path sanitization, symlink protection, replay protection
+- **Zero-Trust Architecture**: The relay server never sees plaintext data
+- **Strong Cryptography**: Argon2id for key derivation, Noise Protocol for handshake, ChaCha20-Poly1305 for transport encryption
+- **Cross-Platform**: Works on Linux, macOS, and Windows
+- **NAT-Safe**: All connections are outbound, works behind firewalls
+- **TUI File Browser**: Interactive terminal interface for browsing and downloading files
+- **No Long-Term Secrets**: Sessions expire automatically
+- **Secure by Design**: Path sanitization, symlink protection, replay protection
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Install
 
@@ -54,7 +54,7 @@ chmod +x orb
 sudo mv orb /usr/local/bin/
 ```
 
-Or [build from source](#-building-from-source).
+Or [build from source](#building-from-source).
 
 ### Share a Folder
 
@@ -81,7 +81,7 @@ orb connect 7F9Q2A
 
 Prompts for passcode, then opens an interactive file browser.
 
-## 📖 Commands
+## Commands
 
 ### `orb share <path>`
 
@@ -129,7 +129,7 @@ Example:
 orb relay --listen 0.0.0.0:8080
 ```
 
-## 🔐 Security Features
+## Security Features
 
 ### Cryptography
 
@@ -140,13 +140,13 @@ orb relay --listen 0.0.0.0:8080
 
 ### Protection Against
 
-- ✅ Passcode brute force (Argon2id memory-hard function)
-- ✅ Replay attacks (unique nonces per packet)
-- ✅ Man-in-the-middle (Noise Protocol mutual authentication)
-- ✅ Path traversal (path sanitization and validation)
-- ✅ Symlink attacks (symlink resolution and boundary checking)
-- ✅ Session hijacking (rate limiting and session locking)
-- ✅ Relay compromise (end-to-end encryption, relay is blind)
+- Passcode brute force (Argon2id memory-hard function)
+- Replay attacks (unique nonces per packet)
+- Man-in-the-middle (Noise Protocol mutual authentication)
+- Path traversal (path sanitization and validation)
+- Symlink attacks (symlink resolution and boundary checking)
+- Session hijacking (rate limiting and session locking)
+- Relay compromise (end-to-end encryption, relay is blind)
 
 ### Filesystem Security
 
@@ -156,7 +156,7 @@ orb relay --listen 0.0.0.0:8080
 - Configurable read-only mode
 - Automatic session expiration
 
-## 🏗️ Architecture
+## Architecture
 
 Orb consists of three components:
 
@@ -176,7 +176,7 @@ Orb consists of three components:
               Relay never sees plaintext data
 ```
 
-## 🛠️ Building from Source
+## Building from Source
 
 ### Prerequisites
 
@@ -215,7 +215,7 @@ ls build/
 # orb-windows-amd64.exe
 ```
 
-## 🧪 Development
+## Development
 
 ### Run Tests
 
@@ -247,11 +247,11 @@ make share
 SESSION=<session-id> make connect
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 Orb uses sensible defaults and requires no configuration files. All settings are passed via command-line flags.
 
-## 📚 Documentation
+## Documentation
 
 For comprehensive documentation, visit the [Orb Documentation](docs/):
 
@@ -298,7 +298,7 @@ mkdocs serve
 mkdocs build
 ```
 
-## 🖥️ Platform-Specific Notes
+## Platform-Specific Notes
 
 ### Linux
 
@@ -315,26 +315,26 @@ mkdocs build
 - TUI mode works out of the box
 - Install: Use provided binaries or build from source
 
-## ⚠️ Limitations
+## Limitations
 
 - Maximum file size: Limited by available memory (10MB per read operation)
 - Sessions expire after 24 hours
 - Maximum 5 failed passcode attempts before session lock
 - Read-only access (no file upload/modification)
 
-## 🔒 Security Disclosure
+## Security Disclosure
 
 If you discover a security vulnerability, please email security@orb.example.com. Do not create public issues for security vulnerabilities.
 
-## 📄 License
+## License
 
 MIT License - see [LICENSE](docs/about/license.md) file for details
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please read [Contributing Guide](docs/development/contributing.md) for guidelines.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Noise Protocol Framework](https://noiseprotocol.org/)
 - [ChaCha20-Poly1305 (RFC 8439)](https://www.rfc-editor.org/rfc/rfc8439)
@@ -348,10 +348,10 @@ Contributions are welcome! Please read [Contributing Guide](docs/development/con
 
 **Remember**: Orb is designed for security. If a feature weakens encryption, privacy, or isolation, it will not be implemented.
 
-**Stay safe. Stay secure.** 🛡️
+**Stay safe. Stay secure.**
 
-Made with ❤️ by developers who care about security and privacy.
+Made with care by developers who prioritize security and privacy.
 
-[⭐ Star us on GitHub](https://github.com/Zayan-Mohamed/orb) | [📖 Read the Docs](https://zayan-mohamed.github.io/orb/) | [🐛 Report Bug](https://github.com/Zayan-Mohamed/orb/issues) | [💡 Request Feature](https://github.com/Zayan-Mohamed/orb/issues)
+[Star us on GitHub](https://github.com/Zayan-Mohamed/orb) | [Read the Docs](https://zayan-mohamed.github.io/orb/) | [Report Bug](https://github.com/Zayan-Mohamed/orb/issues) | [Request Feature](https://github.com/Zayan-Mohamed/orb/issues)
 
 </div>
