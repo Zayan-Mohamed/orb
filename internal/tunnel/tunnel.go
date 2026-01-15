@@ -15,9 +15,9 @@ import (
 
 const (
 	// Timeout constants
-	handshakeReadTimeout  = 120 * time.Second // Increased for slow connections 
+	handshakeReadTimeout  = 120 * time.Second // Increased for slow connections
 	handshakeWriteTimeout = 30 * time.Second
-	dataReadTimeout       = 120 * time.Second // Increased for large file transfers 
+	dataReadTimeout       = 120 * time.Second // Increased for large file transfers
 	dataWriteTimeout      = 30 * time.Second
 )
 
