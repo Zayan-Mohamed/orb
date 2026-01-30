@@ -131,38 +131,9 @@ func (m model) Init() tea.Cmd {
 }
 
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	// Handle download progress messages first (highest priority)
-	switch msg := msg.(type) {
-	case downloadProgressMsg:
-		if m.download.isDownloading && !m.download.cancelled {
-			m.download.downloaded = msg.downloaded
-			m.download.speed = msg.speed
-			m.download.progress = float64(msg.downloaded) / float64(m.download.totalSize) * 100
-			return m, nil
-		}
-
-	case downloadCompleteMsg:
-		m.download.isDownloading = false
-		m.download.progress = 100
-		// Reset after 2 seconds
-		return m, tea.Tick(2*time.Second, func(t time.Time) tea.Msg {
-			return downloadResetMsg{}
-		})
-
-	case downloadErrorMsg:
-		m.download.isDownloading = false
-		m.error = msg.error
-		return m, nil
-
-	case downloadCancelMsg:
-		// Reset download state
-		m.download = downloadState{}
-		return m, m.loadDirectory()
-
-	case downloadResetMsg:
-		// Reset download state
-		m.download = downloadState{}
-		return m, m.loadDirectory()
+	// Handle download-related messages via helper
+	if m2, cmd, handled := m.handleDownloadMsg(msg); handled {
+		return m2, cmd
 	}
 
 	// Handle key messages with download cancellation
@@ -173,62 +144,9 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		return m, nil
 
 	case tea.KeyMsg:
-		// ESC key cancels downloads
-		if key.Matches(msg, key.NewBinding(key.WithKeys("escape"))) {
-			if m.download.isDownloading {
-				m.download.cancelled = true
-				m.download.isDownloading = false
-				return m, nil
-			}
+		if m2, cmd, handled := m.handleKeyMsg(msg); handled {
+			return m2, cmd
 		}
-
-		switch {
-		case key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+c", "q"))):
-			return m, tea.Quit
-
-		case key.Matches(msg, key.NewBinding(key.WithKeys("enter"))):
-			if m.download.isDownloading {
-				return m, nil // Ignore input during download
-			}
-
-			selected := m.list.SelectedItem()
-			if selected != nil {
-				item := selected.(fileItem)
-				if item.isDir {
-					if item.name == ".." {
-						m.currentPath = filepath.Dir(m.currentPath)
-					} else {
-						m.currentPath = filepath.Join(m.currentPath, item.name)
-					}
-					return m, m.loadDirectory()
-				} else {
-					return m, m.initiateDownload(item.name, item.size)
-				}
-			}
-
-		case key.Matches(msg, key.NewBinding(key.WithKeys("backspace"))):
-			if m.download.isDownloading {
-				return m, nil
-			}
-			if m.currentPath != "/" {
-				m.currentPath = filepath.Dir(m.currentPath)
-				return m, m.loadDirectory()
-			}
-
-		case key.Matches(msg, key.NewBinding(key.WithKeys("d"))):
-			if m.download.isDownloading {
-				return m, nil
-			}
-
-			selected := m.list.SelectedItem()
-			if selected != nil {
-				item := selected.(fileItem)
-				if !item.isDir {
-					return m, m.initiateDownload(item.name, item.size)
-				}
-			}
-		}
-
 	case []list.Item:
 		if !m.download.isDownloading {
 			m.list.SetItems(msg)
@@ -246,6 +164,124 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	m.list, cmd = m.list.Update(msg)
 	return m, cmd
+}
+
+// handleDownloadMsg handles download-related messages and returns handled=true if message
+// was consumed. It keeps `model.Update` smaller and easier to test.
+func (m model) handleDownloadMsg(msg tea.Msg) (model, tea.Cmd, bool) {
+	switch msg := msg.(type) {
+	case downloadProgressMsg:
+		if m.download.isDownloading && !m.download.cancelled {
+			m.download.downloaded = msg.downloaded
+			m.download.speed = msg.speed
+			m.download.progress = float64(msg.downloaded) / float64(m.download.totalSize) * 100
+			return m, nil, true
+		}
+
+	case downloadCompleteMsg:
+		m.download.isDownloading = false
+		m.download.progress = 100
+		// Reset after 2 seconds
+		return m, tea.Tick(2*time.Second, func(t time.Time) tea.Msg {
+			return downloadResetMsg{}
+		}), true
+
+	case downloadErrorMsg:
+		m.download.isDownloading = false
+		m.error = msg.error
+		return m, nil, true
+
+	case downloadCancelMsg:
+		// Reset download state
+		m.download = downloadState{}
+		return m, m.loadDirectory(), true
+
+	case downloadResetMsg:
+		// Reset download state
+		m.download = downloadState{}
+		return m, m.loadDirectory(), true
+	}
+
+	return m, nil, false
+}
+
+// handleKeyMsg extracts logic for keyboard handling from `model.Update`.
+// It returns handled=true when the key is consumed and should not be forwarded
+// to the list component.
+func (m model) handleKeyMsg(msg tea.KeyMsg) (model, tea.Cmd, bool) {
+	// ESC key cancels downloads
+	if key.Matches(msg, key.NewBinding(key.WithKeys("escape"))) {
+		if m.download.isDownloading {
+			m.download.cancelled = true
+			m.download.isDownloading = false
+			return m, nil, true
+		}
+	}
+
+	switch {
+	case key.Matches(msg, key.NewBinding(key.WithKeys("ctrl+c", "q"))):
+		return m, tea.Quit, true
+
+	case key.Matches(msg, key.NewBinding(key.WithKeys("enter"))):
+		return m.handleEnterKey()
+
+	case key.Matches(msg, key.NewBinding(key.WithKeys("backspace"))):
+		return m.handleBackspaceKey()
+
+	case key.Matches(msg, key.NewBinding(key.WithKeys("d"))):
+		return m.handleDownloadKey()
+	}
+
+	return m, nil, false
+}
+
+// handleEnterKey handles Enter key behavior (navigation or download).
+func (m model) handleEnterKey() (model, tea.Cmd, bool) {
+	if m.download.isDownloading {
+		return m, nil, true
+	}
+
+	selected := m.list.SelectedItem()
+	if selected != nil {
+		item := selected.(fileItem)
+		if item.isDir {
+			if item.name == ".." {
+				m.currentPath = filepath.Dir(m.currentPath)
+			} else {
+				m.currentPath = filepath.Join(m.currentPath, item.name)
+			}
+			return m, m.loadDirectory(), true
+		}
+		return m, m.initiateDownload(item.name, item.size), true
+	}
+	return m, nil, false
+}
+
+// handleBackspaceKey handles navigation up one directory.
+func (m model) handleBackspaceKey() (model, tea.Cmd, bool) {
+	if m.download.isDownloading {
+		return m, nil, true
+	}
+	if m.currentPath != "/" {
+		m.currentPath = filepath.Dir(m.currentPath)
+		return m, m.loadDirectory(), true
+	}
+	return m, nil, false
+}
+
+// handleDownloadKey handles explicit download command ("d").
+func (m model) handleDownloadKey() (model, tea.Cmd, bool) {
+	if m.download.isDownloading {
+		return m, nil, true
+	}
+	selected := m.list.SelectedItem()
+	if selected != nil {
+		item := selected.(fileItem)
+		if !item.isDir {
+			return m, m.initiateDownload(item.name, item.size), true
+		}
+	}
+	return m, nil, false
 }
 
 func (m model) View() string {
