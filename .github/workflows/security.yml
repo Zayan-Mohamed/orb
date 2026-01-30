@@ -24,22 +24,20 @@ jobs:
   gosec:
     name: Security Scan with gosec
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v6
+      - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
 
-      - name: Run Gosec Security Scanner
-        uses: securego/gosec@master
+      - name: Run gosec
+        uses: securego/gosec@v2.22.11
         with:
           args: "-fmt sarif -out gosec-results.sarif ./..."
 
-      - name: Upload SARIF file
+      - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: gosec-results.sarif
@@ -61,7 +59,6 @@ jobs:
   trivy:
     name: Trivy Vulnerability Scan
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
