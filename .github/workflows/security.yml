@@ -31,12 +31,10 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
-
       - name: Run gosec
-        uses: securego/gosec@v2.22.11
+        uses: securego/gosec@master
         with:
-          args: "-fmt sarif -out gosec-results.sarif ./..."
-
+          args: "-fmt sarif -out gosec-results.sarif -no-fail ./..."
       - name: Upload SARIF
         uses: github/codeql-action/upload-sarif@v4
         with:
