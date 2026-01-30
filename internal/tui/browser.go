@@ -413,16 +413,19 @@ func (m model) initiateDownload(filename string, size int64) tea.Cmd {
 		if err != nil {
 			return downloadErrorMsg{error: err.Error()}
 		}
-		defer file.Close()
-
-		// Download in chunks
+		defer func() {
+			if err := file.Close(); err != nil {
+				fmt.Fprintf(os.Stderr, "warning: failed to close file %s: %v\n", localPath, err)
+			}
+		}()
 		var totalDownloaded int64
 		chunkSize := m.download.chunkSize
-
 		for offset := int64(0); offset < size; offset += chunkSize {
 			// Check for cancellation
 			if m.download.cancelled {
-				os.Remove(localPath) // Clean up partial file
+				if err := os.Remove(localPath); err != nil && !os.IsNotExist(err) {
+					return downloadErrorMsg{error: err.Error()}
+				}
 				return downloadCancelMsg{}
 			}
 
