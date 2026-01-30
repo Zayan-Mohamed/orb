@@ -301,8 +301,9 @@ func (m model) renderDownloadProgress() string {
 	}
 	empty := barWidth - filled
 
-	progressBar := strings.Repeat("█", filled) + strings.Repeat("░", empty)
-	b.WriteString(progressBarStyle.Render(progressBar))
+	filledStr := progressFilledStyle.Render(strings.Repeat("█", filled))
+	emptyStr := strings.Repeat("░", empty)
+	b.WriteString(progressBarStyle.Render(filledStr + emptyStr))
 	b.WriteString("\n\n")
 
 	// Progress info
@@ -481,18 +482,10 @@ func (m model) initiateDownload(filename string, size int64) tea.Cmd {
 
 			totalDownloaded += int64(len(readResp.Data))
 
-			// Calculate speed (bytes per second)
-			elapsed := time.Now().Unix() - m.download.startTime
-			var speed int64
-			if elapsed > 0 {
-				speed = totalDownloaded / elapsed
-			}
+			// speed calculation removed; progress will be shown after completion
+			_ = time.Now().Unix() - m.download.startTime
 
-			// Send progress update
-			return downloadProgressMsg{
-				downloaded: totalDownloaded,
-				speed:      speed,
-			}
+			// continue downloading; progress will be shown after completion
 		}
 
 		// Download complete
@@ -500,53 +493,6 @@ func (m model) initiateDownload(filename string, size int64) tea.Cmd {
 			filename: filename,
 			size:     totalDownloaded,
 		}
-	}
-}
-
-func (m model) downloadFile(filename string) tea.Cmd {
-	// Legacy method - now redirects to initiateDownload
-	// We need to get file size first
-	return func() tea.Msg {
-		remotePath := filepath.Join(m.currentPath, filename)
-
-		// Get file info first
-		statReq := protocol.StatRequest{
-			Path: remotePath,
-		}
-
-		var buf bytes.Buffer
-		_ = gob.NewEncoder(&buf).Encode(statReq)
-
-		frame := &protocol.Frame{
-			Type:    protocol.FrameTypeStat,
-			Payload: buf.Bytes(),
-		}
-
-		if err := m.tunnel.SendFrame(frame); err != nil {
-			return err
-		}
-
-		respFrame, err := m.tunnel.ReceiveFrame()
-		if err != nil {
-			return err
-		}
-
-		if respFrame.Type == protocol.FrameTypeError {
-			var errResp protocol.ErrorResponse
-			_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&errResp)
-			return fmt.Errorf("%s", errResp.Message)
-		}
-
-		if respFrame.Type != protocol.FrameTypeResponse {
-			return fmt.Errorf("unexpected frame type: %d", respFrame.Type)
-		}
-
-		var statResp protocol.StatResponse
-		_ = gob.NewDecoder(bytes.NewReader(respFrame.Payload)).Decode(&statResp)
-
-		// Now initiate the actual download
-		cmd := m.initiateDownload(filename, statResp.Info.Size)
-		return cmd()
 	}
 }
 
