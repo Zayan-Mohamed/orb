@@ -181,7 +181,10 @@ func (fs *SecureFilesystem) Read(path string, offset, length int64) (*protocol.R
 	}
 
 	// Calculate read length
-	if length <= 0 || offset+length > info.Size() {
+	if length < 0 {
+		return nil, errors.New("invalid length")
+	}
+	if length == 0 || offset+length > info.Size() {
 		length = info.Size() - offset
 	}
 
@@ -191,8 +194,15 @@ func (fs *SecureFilesystem) Read(path string, offset, length int64) (*protocol.R
 		length = maxReadSize
 	}
 
+	// Safely convert length to int for slice allocation
+	maxInt := int64(int(^uint(0) >> 1))
+	if length > maxInt {
+		return nil, errors.New("requested read length too large")
+	}
+	bufLen := int(length)
+
 	// Read data
-	data := make([]byte, length)
+	data := make([]byte, bufLen)
 	n, err := io.ReadFull(file, data)
 	if err != nil && err != io.EOF && err != io.ErrUnexpectedEOF {
 		return nil, fmt.Errorf("failed to read file: %w", err)
