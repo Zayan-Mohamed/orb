@@ -444,6 +444,11 @@ func (m model) initiateDownload(filename string, size int64) tea.Cmd {
 		remotePath := filepath.Join(m.currentPath, filename)
 		localPath := filepath.Join(".", filename)
 
+		// Validate filename to prevent path traversal
+		if strings.Contains(filename, "..") || strings.Contains(filename, "/") || strings.Contains(filename, "\\") {
+			return downloadErrorMsg{error: "invalid filename: contains path separators"}
+		}
+
 		// Create local file
 		file, err := os.OpenFile(localPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
 		if err != nil {
