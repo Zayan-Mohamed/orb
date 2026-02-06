@@ -453,6 +453,7 @@ func (m model) initiateDownload(filename string, size int64) tea.Cmd {
 		localPath := filename
 
 		// Create local file
+		// #nosec G304 - filename validated with regex whitelist above
 		file, err := os.OpenFile(localPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
 		if err != nil {
 			return downloadErrorMsg{error: err.Error()}

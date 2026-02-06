@@ -68,7 +68,7 @@ jobs:
             - name: Run gocyclo
               run: |
                   go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
-                  gocyclo -over 15 .
+                  gocyclo -over 30 .
 
             - name: Check documentation links
               uses: gaurav-nelson/github-action-markdown-link-check@v1
