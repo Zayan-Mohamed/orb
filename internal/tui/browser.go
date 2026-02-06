@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -442,12 +443,14 @@ func (m model) initiateDownload(filename string, size int64) tea.Cmd {
 		m.download.startTime = time.Now().Unix()
 
 		remotePath := filepath.Join(m.currentPath, filename)
-		localPath := filepath.Join(".", filename)
 
-		// Validate filename to prevent path traversal
-		if strings.Contains(filename, "..") || strings.Contains(filename, "/") || strings.Contains(filename, "\\") {
-			return downloadErrorMsg{error: "invalid filename: contains path separators"}
+		// Validate filename to prevent path traversal - only allow safe characters
+		match, _ := regexp.MatchString(`^[a-zA-Z0-9._-]+$`, filename)
+		if !match {
+			return downloadErrorMsg{error: "invalid filename: contains unsafe characters"}
 		}
+
+		localPath := filename
 
 		// Create local file
 		file, err := os.OpenFile(localPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
